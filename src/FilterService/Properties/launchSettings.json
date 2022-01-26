@@ -1,0 +1,13 @@
+﻿{
+  "profiles": {
+    "FilterService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "RabbitMqUsername": "guest",
+        "RabbitMqPassword": "guest"
+      },
+      "externalUrlConfiguration": true
+    }
+  }
+}
