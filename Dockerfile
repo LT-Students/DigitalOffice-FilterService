@@ -11,4 +11,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0-bullseye-slim AS base
 WORKDIR /app
 COPY --from=build /app/out .
 EXPOSE 80
-ENTRYPOINT ["dotnet", "LT.DigitalOffice.FileService.dll"]
+ENTRYPOINT ["dotnet", "LT.DigitalOffice.FilterService.dll"]

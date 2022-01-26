@@ -55,14 +55,14 @@ namespace LT.DigitalOffice.FilterService
 	  Configuration = configuration;
 
 	  _serviceInfoConfig = Configuration
-		  .GetSection(BaseServiceInfoConfig.SectionName)
-		  .Get<BaseServiceInfoConfig>();
+		.GetSection(BaseServiceInfoConfig.SectionName)
+		.Get<BaseServiceInfoConfig>();
 
 	  _rabbitMqConfig = Configuration
-		  .GetSection(BaseRabbitMqConfig.SectionName)
-		  .Get<BaseRabbitMqConfig>();
+	    .GetSection(BaseRabbitMqConfig.SectionName)
+	    .Get<BaseRabbitMqConfig>();
 
-	  Version = "1.0.0";
+	  Version = "1.0.0.0";
 	  Description = "FilterService is an API that intended to find userss update user's their parameters.";
 	  StartTime = DateTime.UtcNow;
 	  ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
@@ -86,7 +86,7 @@ namespace LT.DigitalOffice.FilterService
 	  services.AddHttpContextAccessor();
 
 	  services.AddHealthChecks()
-			.AddRabbitMqCheck();
+          .AddRabbitMqCheck();
 
       services.Configure<TokenConfiguration>(Configuration.GetSection("CheckTokenMiddleware"));
 	  services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
