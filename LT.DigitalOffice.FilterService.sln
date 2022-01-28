@@ -37,6 +37,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterService.Validation", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{283AC1C0-3C97-414A-BE4E-F946F81C6452}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterService.Mappers", "src\FilterService.Mappers\FilterService.Mappers.csproj", "{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -78,6 +84,7 @@ Global
 		{1F8E8888-0EEE-4D7C-83CE-0D967C9DA0E1} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
 		{4D3B3EC0-5DE3-444E-A848-0AAA5320EC85} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
 		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {00624EC3-7F7E-490F-BF32-F30769B32A90}
