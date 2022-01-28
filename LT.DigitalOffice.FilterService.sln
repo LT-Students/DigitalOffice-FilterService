@@ -1,0 +1,84 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterService", "src\FilterService\FilterService.csproj", "{C1C192B2-BF34-447F-970F-058F3BC2450E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{546F2430-170B-4C33-BE29-A44E7AA38DF2} = {546F2430-170B-4C33-BE29-A44E7AA38DF2}
+		{4D3B3EC0-5DE3-444E-A848-0AAA5320EC85} = {4D3B3EC0-5DE3-444E-A848-0AAA5320EC85}
+		{08D880D8-21EF-479A-8604-01F278AE8C75} = {08D880D8-21EF-479A-8604-01F278AE8C75}
+		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9} = {59416CEA-9B9A-4D39-BC00-FDA011AFCCA9}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{49057B78-DB3E-4909-88BA-477E25A042AF}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Common.Configurations.targets = Common.Configurations.targets
+		Dockerfile = Dockerfile
+		..\DigitalOffice-FileService\.github\workflows\main.yml = ..\DigitalOffice-FileService\.github\workflows\main.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterService.Broker", "src\FilterService.Broker\FilterService.Broker.csproj", "{08D880D8-21EF-479A-8604-01F278AE8C75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterService.Business", "src\FilterService.Business\FilterService.Business.csproj", "{546F2430-170B-4C33-BE29-A44E7AA38DF2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterService.Models.Dto", "src\FilterService.Models.Dto\FilterService.Models.Dto.csproj", "{4D3B3EC0-5DE3-444E-A848-0AAA5320EC85}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterService.Validation", "src\FilterService.Validation\FilterService.Validation.csproj", "{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{283AC1C0-3C97-414A-BE4E-F946F81C6452}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilterService.Mappers", "src\FilterService.Mappers\FilterService.Mappers.csproj", "{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1C192B2-BF34-447F-970F-058F3BC2450E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1C192B2-BF34-447F-970F-058F3BC2450E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1C192B2-BF34-447F-970F-058F3BC2450E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1C192B2-BF34-447F-970F-058F3BC2450E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08D880D8-21EF-479A-8604-01F278AE8C75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D880D8-21EF-479A-8604-01F278AE8C75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D880D8-21EF-479A-8604-01F278AE8C75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D880D8-21EF-479A-8604-01F278AE8C75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{546F2430-170B-4C33-BE29-A44E7AA38DF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{546F2430-170B-4C33-BE29-A44E7AA38DF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{546F2430-170B-4C33-BE29-A44E7AA38DF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{546F2430-170B-4C33-BE29-A44E7AA38DF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D3B3EC0-5DE3-444E-A848-0AAA5320EC85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D3B3EC0-5DE3-444E-A848-0AAA5320EC85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D3B3EC0-5DE3-444E-A848-0AAA5320EC85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D3B3EC0-5DE3-444E-A848-0AAA5320EC85}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C1C192B2-BF34-447F-970F-058F3BC2450E} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
+		{08D880D8-21EF-479A-8604-01F278AE8C75} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
+		{546F2430-170B-4C33-BE29-A44E7AA38DF2} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
+		{4D3B3EC0-5DE3-444E-A848-0AAA5320EC85} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
+		{59416CEA-9B9A-4D39-BC00-FDA011AFCCA9} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
+		{C238EEE5-E3F1-41CC-82AB-09C65E8D984E} = {2D5D9341-AAFE-41C2-A3C7-92BAF6F71880}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00624EC3-7F7E-490F-BF32-F30769B32A90}
+	EndGlobalSection
+EndGlobal
