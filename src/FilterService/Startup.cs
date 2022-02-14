@@ -73,7 +73,7 @@ namespace LT.DigitalOffice.FilterService
 	    .GetSection(BaseRabbitMqConfig.SectionName)
 	    .Get<RabbitMqConfig>();
 
-	  Version = "1.0.1.0";
+	  Version = "1.0.0.0";
 	  Description = "FilterService is an API that intended to find userss update user's their parameters.";
 	  StartTime = DateTime.UtcNow;
 	  ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
@@ -98,18 +98,6 @@ namespace LT.DigitalOffice.FilterService
 
 	  services.AddHealthChecks()
           .AddRabbitMqCheck();
-
-      if (int.TryParse(Environment.GetEnvironmentVariable("RedisCacheLiveInMinutes"), out int redisCacheLifeTime))
-      {
-        services.Configure<RedisConfig>(options =>
-        {
-          options.CacheLiveInMinutes = redisCacheLifeTime;
-        });
-      }
-      else
-      {
-        services.Configure<RedisConfig>(Configuration.GetSection(RedisConfig.SectionName));
-      }
 
       services.Configure<TokenConfiguration>(Configuration.GetSection("CheckTokenMiddleware"));
 	  services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));

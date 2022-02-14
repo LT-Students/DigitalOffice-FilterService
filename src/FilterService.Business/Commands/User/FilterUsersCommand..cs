@@ -32,7 +32,7 @@ using Microsoft.Extensions.Logging;
 
 namespace LT.DigitalOffice.FilterService.Business.Commands.User
 {
-  public class UserServiceFilterCommand : IUserServiceFilterCommand
+  public class FilterUsersCommand : IFilterUsersCommand
   {
     private readonly IRequestClient<IFilterOfficesRequest> _rcGetOffices;
     private readonly IRequestClient<IFilterDepartmentsRequest> _rcGetDepartments;
@@ -48,11 +48,11 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     private readonly IDepartmentInfoMapper _departmentInfoMapper;
     private readonly IOfficeInfoMapper _officeInfoMapper;
     private readonly IRolesInfoMapper _rolesInfoMapper;
-    private readonly ILogger<UserServiceFilterCommand> _logger;
+    private readonly ILogger<FilterUsersCommand> _logger;
 
     #region private methods
 
-    private async Task<List<OfficeFilteredData>> GetOfficeFilteredDataAsync(List<Guid> officesIds, List<string> errors)
+    private async Task<List<OfficeFilteredData>> GetOfficeFilterDataAsync(List<Guid> officesIds, List<string> errors)
     {
       if (officesIds == null || !officesIds.Any())
       {
@@ -60,12 +60,14 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       }
 
       return (await RequestHandler.ProcessRequest<IFilterOfficesRequest, IFilterOfficesResponse>(
-       _rcGetOffices,
-       IFilterOfficesRequest.CreateObj(officesIds),
-       errors, _logger)).Offices.ToList();
+        _rcGetOffices,
+        IFilterOfficesRequest.CreateObj(officesIds),
+        errors, 
+        _logger))
+        .Offices;
     }
 
-    private async Task<List<DepartmentFilteredData>> GetDepartmentFilteredDataAsync(List<Guid> departmentsIds, List<string> errors)
+    private async Task<List<DepartmentFilteredData>> GetDepartmentFilterDataAsync(List<Guid> departmentsIds, List<string> errors)
     {
       if (departmentsIds == null || !departmentsIds.Any())
       {
@@ -75,10 +77,12 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       return (await RequestHandler.ProcessRequest<IFilterDepartmentsRequest, IFilterDepartmentsResponse>(
         _rcGetDepartments,
         IFilterDepartmentsRequest.CreateObj(departmentsIds),
-        errors, _logger)).Departments.ToList();
+        errors,
+        _logger))
+        .Departments;
     }
 
-    private async Task<List<PositionFilteredData>> GetPositionFilteredDataAsync(List<Guid> positionsIds, List<string> errors)
+    private async Task<List<PositionFilteredData>> GetPositionFilterDataAsync(List<Guid> positionsIds, List<string> errors)
     {
       if (positionsIds == null || !positionsIds.Any())
       {
@@ -88,10 +92,12 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       return (await RequestHandler.ProcessRequest<IFilterPositionsRequest, IFilterPositionsResponse>(
         _rcGetPositions,
         IFilterPositionsRequest.CreateObj(positionsIds),
-        errors, _logger)).Positions.ToList();
+        errors,
+        _logger))
+        .Positions;
     }
 
-    private async Task<List<RoleFilteredData>> GetRolesFilteredDataAsync(List<Guid> roleIds, List<string> errors)
+    private async Task<List<RoleFilteredData>> GetRolesFilterDataAsync(List<Guid> roleIds, List<string> errors)
     {
       if (roleIds == null || !roleIds.Any())
       {
@@ -101,7 +107,9 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       return (await RequestHandler.ProcessRequest<IFilterRolesRequest, IFilterRolesResponse>(
         _rcGetRoles,
         IFilterRolesRequest.CreateObj(roleIds),
-        errors, _logger)).Roles.ToList();
+        errors,
+        _logger))
+        .Roles;
     }
 
     private async Task<List<UserData>> GetUsersDataAsync(List<Guid> usersIds, FilterUserService filter, List<string> errors)
@@ -114,13 +122,17 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         return (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
           _rcGetUsers,
           IGetUsersDataRequest.CreateObj(new List<Guid>(), filter.SkipCount, filter.TakeCount),
-          errors, _logger)).UsersData.ToList();
+          errors,
+          _logger))
+          .UsersData;
       }
 
       return (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
           _rcGetUsers,
           IGetUsersDataRequest.CreateObj(usersIds),
-          errors, _logger)).UsersData.ToList();
+          errors,
+          _logger))
+          .UsersData;
     }
 
     private async Task<List<PositionData>> GetPositionsDataAsync(List<Guid> usersIds, List<string> errors)
@@ -128,7 +140,9 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       return (await RequestHandler.ProcessRequest<IGetPositionsRequest, IGetPositionsResponse>(
           _rcGetPositionsData,
           IGetPositionsRequest.CreateObj(usersIds),
-          errors, _logger)).Positions.ToList();
+          errors,
+          _logger))
+          .Positions;
     }
 
     private async Task<List<DepartmentData>> GetDepartmentsDataAsync(
@@ -138,7 +152,9 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       return (await RequestHandler.ProcessRequest<IGetDepartmentsRequest, IGetDepartmentsResponse>(
           _rcGetDepartmentsData,
           IGetPositionsRequest.CreateObj(usersIds),
-          errors, _logger)).Departments.ToList();
+          errors,
+          _logger))
+          .Departments;
     }
 
     private async Task<List<ImageData>> GetImagesDataAsync(List<Guid> usersImageIds, List<string> errors)
@@ -151,8 +167,9 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       return (await RequestHandler.ProcessRequest<IGetImagesRequest, IGetImagesResponse>(
         _rcGetImages,
         IGetImagesRequest.CreateObj(usersImageIds, ImageSource.User),
-        errors, _logger)).ImagesData.ToList();
-
+        errors,
+        _logger))
+        .ImagesData;
     }
 
     private List<Guid> FilteredUserIds(List<Guid> officesUserIds, 
@@ -280,7 +297,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
     #endregion
 
-    public UserServiceFilterCommand(
+    public FilterUsersCommand(
       IRequestClient<IFilterOfficesRequest> rcGetOffices,
       IRequestClient<IFilterDepartmentsRequest> rcGetDepartments,
       IRequestClient<IFilterPositionsRequest> rcGetPositions,
@@ -295,7 +312,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       IDepartmentInfoMapper departmentInfoMapper,
       IOfficeInfoMapper officeInfoMapper,
       IRolesInfoMapper rolesInfoMapper,
-      ILogger<UserServiceFilterCommand> logger)
+      ILogger<FilterUsersCommand> logger)
     {
       _rcGetOffices = rcGetOffices;
       _rcGetDepartments = rcGetDepartments;
@@ -321,10 +338,10 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       List<UserInfo> userInfo = new();
       List<string> errors = new();
 
-      Task<List<DepartmentFilteredData>> departmentsUsersTask = GetDepartmentFilteredDataAsync(filter.DepartmentsIds, response.Errors);
-      Task<List<OfficeFilteredData>> officesUsersTask = GetOfficeFilteredDataAsync(filter.OfficesIds, response.Errors);
-      Task<List<PositionFilteredData>> positionsUsersTask = GetPositionFilteredDataAsync(filter.PositionsIds, response.Errors);
-      Task<List<RoleFilteredData>> rolesUsersTask = GetRolesFilteredDataAsync(filter.RightsIds, response.Errors);
+      Task<List<DepartmentFilteredData>> departmentsUsersTask = GetDepartmentFilterDataAsync(filter.DepartmentsIds, response.Errors);
+      Task<List<OfficeFilteredData>> officesUsersTask = GetOfficeFilterDataAsync(filter.OfficesIds, response.Errors);
+      Task<List<PositionFilteredData>> positionsUsersTask = GetPositionFilterDataAsync(filter.PositionsIds, response.Errors);
+      Task<List<RoleFilteredData>> rolesUsersTask = GetRolesFilterDataAsync(filter.RightsIds, response.Errors);
 
       await Task.WhenAll(departmentsUsersTask, officesUsersTask, positionsUsersTask, rolesUsersTask);
 
@@ -341,10 +358,10 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
       //ToDo add emplementation SkipCount TakeCount
       if ((filter.RightsIds is null &&
-           filter.OfficesIds is null &&
-           filter.DepartmentsIds is null &&
-           filter.PositionsIds is null) ||
-           filteredUsers is not null)
+            filter.OfficesIds is null &&
+            filter.DepartmentsIds is null &&
+            filter.PositionsIds is null) ||
+            filteredUsers is not null)
       {
         List<UserData> usersData = await GetUsersDataAsync(filteredUsers, filter, errors);
 
@@ -373,8 +390,8 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         if (filter.DepartmentsIds is null)
         {
           departmentData.AddRange(await GetDepartmentsDataAsync(
-                usersData.Select(u => u.Id).ToList(),
-                errors));
+            usersData.Select(u => u.Id).ToList(),
+            errors));
 
           departmentInfo.AddRange(_departmentInfoMapper.Map(departmentData));
         }

@@ -9,7 +9,7 @@ using LT.DigitalOffice.Kernel.Responses;
 namespace LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces
 {
   [AutoInject]
-  public interface IUserServiceFilterCommand
+  public interface IFilterUsersCommand
   {
     Task<FindResultResponse<UserInfo>> ExecuteAsync(FilterUserService filter);
   }

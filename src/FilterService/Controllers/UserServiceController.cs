@@ -14,7 +14,7 @@ namespace LT.DigitalOffice.FilterService.Controllers
   {
     [HttpGet("filter")]
     public async Task<FindResultResponse<UserInfo>> GetAsync(
-      [FromServices] IUserServiceFilterCommand command,
+      [FromServices] IFilterUsersCommand command,
       [FromQuery] FilterUserService filter)
     {
       return await command.ExecuteAsync(filter);
