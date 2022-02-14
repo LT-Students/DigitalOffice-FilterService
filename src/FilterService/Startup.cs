@@ -1,10 +1,16 @@
 ﻿using HealthChecks.UI.Client;
+using LT.DigitalOffice.FilterService.Models.Dto.Configurations;
 using LT.DigitalOffice.Kernel.BrokerSupport.Configurations;
 using LT.DigitalOffice.Kernel.BrokerSupport.Extensions;
+using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.BrokerSupport.Middlewares.Token;
 using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
+using LT.DigitalOffice.Kernel.Helpers;
 using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
+using LT.DigitalOffice.Kernel.RedisSupport.Configurations;
+using LT.DigitalOffice.Kernel.RedisSupport.Helpers;
+using LT.DigitalOffice.Kernel.RedisSupport.Helpers.Interfaces;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -13,6 +19,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 
@@ -23,7 +31,7 @@ namespace LT.DigitalOffice.FilterService
 	public const string CorsPolicyName = "LtDoCorsPolicy";
 
 	private readonly BaseServiceInfoConfig _serviceInfoConfig;
-	private readonly BaseRabbitMqConfig _rabbitMqConfig;
+	private readonly RabbitMqConfig _rabbitMqConfig;
 
 	public IConfiguration Configuration { get; }
 
@@ -31,18 +39,21 @@ namespace LT.DigitalOffice.FilterService
 
 	private void ConfigureMassTransit(IServiceCollection services)
 	{
-	  services.AddMassTransit(busConfigurator =>
+      (string username, string password) = RabbitMqCredentialsHelper
+        .Get(_rabbitMqConfig, _serviceInfoConfig);
+
+      services.AddMassTransit(busConfigurator =>
 	  {
 		busConfigurator.UsingRabbitMq((context, cfg) =>
 		{
 		  cfg.Host(_rabbitMqConfig.Host, "/", host =>
 		  {
-			host.Username($"{_serviceInfoConfig.Name}_{_serviceInfoConfig.Id}");
-			host.Password(_serviceInfoConfig.Id);
+			host.Username(username);
+			host.Password(password);
 		  });
 		});
 
-		busConfigurator.AddRequestClients(_rabbitMqConfig);
+      busConfigurator.AddRequestClients(_rabbitMqConfig);
 	  });
 
 	  services.AddMassTransitHostedService();
@@ -60,7 +71,7 @@ namespace LT.DigitalOffice.FilterService
 
 	  _rabbitMqConfig = Configuration
 	    .GetSection(BaseRabbitMqConfig.SectionName)
-	    .Get<BaseRabbitMqConfig>();
+	    .Get<RabbitMqConfig>();
 
 	  Version = "1.0.0.0";
 	  Description = "FilterService is an API that intended to find userss update user's their parameters.";
@@ -88,6 +99,18 @@ namespace LT.DigitalOffice.FilterService
 	  services.AddHealthChecks()
           .AddRabbitMqCheck();
 
+      if (int.TryParse(Environment.GetEnvironmentVariable("RedisCacheLiveInMinutes"), out int redisCacheLifeTime))
+      {
+        services.Configure<RedisConfig>(options =>
+        {
+          options.CacheLiveInMinutes = redisCacheLifeTime;
+        });
+      }
+      else
+      {
+        services.Configure<RedisConfig>(Configuration.GetSection(RedisConfig.SectionName));
+      }
+
       services.Configure<TokenConfiguration>(Configuration.GetSection("CheckTokenMiddleware"));
 	  services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
 	  services.Configure<BaseRabbitMqConfig>(Configuration.GetSection(BaseRabbitMqConfig.SectionName));
@@ -100,9 +123,25 @@ namespace LT.DigitalOffice.FilterService
 	  services.AddBusinessObjects();
 
 	  services.AddControllers();
+      services.AddTransient<IRedisHelper, RedisHelper>();
 
-	  ConfigureMassTransit(services);
-	}
+      ConfigureMassTransit(services);
+
+      string redisConnStr = Environment.GetEnvironmentVariable("RedisConnectionString");
+      if (string.IsNullOrEmpty(redisConnStr))
+      {
+        redisConnStr = Configuration.GetConnectionString("Redis");
+
+        Log.Information($"Redis connection string from appsettings.json was used. Value '{PasswordHider.Hide(redisConnStr)}'");
+      }
+      else
+      {
+        Log.Information($"Redis connection string from environment was used. Value '{PasswordHider.Hide(redisConnStr)}'");
+      }
+
+      services.AddSingleton<IConnectionMultiplexer>(
+        x => ConnectionMultiplexer.Connect(redisConnStr));
+    }
 
 	public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
 	{
