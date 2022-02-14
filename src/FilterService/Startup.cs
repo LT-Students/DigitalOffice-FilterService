@@ -73,7 +73,7 @@ namespace LT.DigitalOffice.FilterService
 	    .GetSection(BaseRabbitMqConfig.SectionName)
 	    .Get<RabbitMqConfig>();
 
-	  Version = "1.0.0.0";
+	  Version = "1.0.1.0";
 	  Description = "FilterService is an API that intended to find userss update user's their parameters.";
 	  StartTime = DateTime.UtcNow;
 	  ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
