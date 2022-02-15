@@ -60,10 +60,10 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       }
 
       return (await RequestHandler.ProcessRequest<IFilterOfficesRequest, IFilterOfficesResponse>(
-        _rcGetOffices,
-        IFilterOfficesRequest.CreateObj(officesIds),
-        errors, 
-        _logger))
+          _rcGetOffices,
+          IFilterOfficesRequest.CreateObj(officesIds),
+          errors, 
+          _logger))
         .Offices;
     }
 
@@ -75,10 +75,10 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       }
 
       return (await RequestHandler.ProcessRequest<IFilterDepartmentsRequest, IFilterDepartmentsResponse>(
-        _rcGetDepartments,
-        IFilterDepartmentsRequest.CreateObj(departmentsIds),
-        errors,
-        _logger))
+          _rcGetDepartments,
+          IFilterDepartmentsRequest.CreateObj(departmentsIds),
+          errors,
+          _logger))
         .Departments;
     }
 
@@ -90,10 +90,10 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       }
 
       return (await RequestHandler.ProcessRequest<IFilterPositionsRequest, IFilterPositionsResponse>(
-        _rcGetPositions,
-        IFilterPositionsRequest.CreateObj(positionsIds),
-        errors,
-        _logger))
+          _rcGetPositions,
+          IFilterPositionsRequest.CreateObj(positionsIds),
+          errors,
+          _logger))
         .Positions;
     }
 
@@ -105,10 +105,10 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       }
 
       return (await RequestHandler.ProcessRequest<IFilterRolesRequest, IFilterRolesResponse>(
-        _rcGetRoles,
-        IFilterRolesRequest.CreateObj(roleIds),
-        errors,
-        _logger))
+          _rcGetRoles,
+          IFilterRolesRequest.CreateObj(roleIds),
+          errors,
+          _logger))
         .Roles;
     }
 
@@ -120,18 +120,18 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
           filter.OfficesIds is null)
       {
         return (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
-          _rcGetUsers,
-          IGetUsersDataRequest.CreateObj(new List<Guid>(), filter.SkipCount, filter.TakeCount),
-          errors,
-          _logger))
+            _rcGetUsers,
+            IGetUsersDataRequest.CreateObj(new List<Guid>(), filter.SkipCount, filter.TakeCount),
+            errors,
+            _logger))
           .UsersData;
       }
 
       return (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
-          _rcGetUsers,
-          IGetUsersDataRequest.CreateObj(usersIds),
-          errors,
-          _logger))
+            _rcGetUsers,
+            IGetUsersDataRequest.CreateObj(usersIds),
+            errors,
+            _logger))
           .UsersData;
     }
 
@@ -142,7 +142,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
           IGetPositionsRequest.CreateObj(usersIds),
           errors,
           _logger))
-          .Positions;
+        .Positions;
     }
 
     private async Task<List<DepartmentData>> GetDepartmentsDataAsync(
@@ -154,7 +154,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
           IGetPositionsRequest.CreateObj(usersIds),
           errors,
           _logger))
-          .Departments;
+        .Departments;
     }
 
     private async Task<List<ImageData>> GetImagesDataAsync(List<Guid> usersImageIds, List<string> errors)
@@ -165,10 +165,10 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       }
 
       return (await RequestHandler.ProcessRequest<IGetImagesRequest, IGetImagesResponse>(
-        _rcGetImages,
-        IGetImagesRequest.CreateObj(usersImageIds, ImageSource.User),
-        errors,
-        _logger))
+          _rcGetImages,
+          IGetImagesRequest.CreateObj(usersImageIds, ImageSource.User),
+          errors,
+          _logger))
         .ImagesData;
     }
 
