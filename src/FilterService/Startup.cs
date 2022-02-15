@@ -114,21 +114,6 @@ namespace LT.DigitalOffice.FilterService
       services.AddTransient<IRedisHelper, RedisHelper>();
 
       ConfigureMassTransit(services);
-
-      string redisConnStr = Environment.GetEnvironmentVariable("RedisConnectionString");
-      if (string.IsNullOrEmpty(redisConnStr))
-      {
-        redisConnStr = Configuration.GetConnectionString("Redis");
-
-        Log.Information($"Redis connection string from appsettings.json was used. Value '{PasswordHider.Hide(redisConnStr)}'");
-      }
-      else
-      {
-        Log.Information($"Redis connection string from environment was used. Value '{PasswordHider.Hide(redisConnStr)}'");
-      }
-
-      services.AddSingleton<IConnectionMultiplexer>(
-        x => ConnectionMultiplexer.Connect(redisConnStr));
     }
 
 	public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
