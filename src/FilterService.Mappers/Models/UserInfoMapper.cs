@@ -33,6 +33,7 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
         FirstName = x.FirstName,
         LastName = x.LastName,
         MiddleName = x?.MiddleName,
+        Status = x.Status,
         Avatar = imagesInfo?.FirstOrDefault(image => image.Id == x.ImageId),
         Position = positionInfo?.FirstOrDefault(pi => pi.Id == positionFilteredData?.FirstOrDefault(pfd => pfd.UsersIds.Contains(x.Id))?.Id) ??
           positionInfo?.FirstOrDefault(pi => pi.Id == positionData?.FirstOrDefault(pd => pd.Users.FirstOrDefault(u => u.UserId == x.Id)?.UserId == x.Id)?.Id),  

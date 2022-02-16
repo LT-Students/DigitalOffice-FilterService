@@ -1,4 +1,6 @@
-﻿using HealthChecks.UI.Client;
+﻿using System;
+using System.Collections.Generic;
+using HealthChecks.UI.Client;
 using LT.DigitalOffice.FilterService.Models.Dto.Configurations;
 using LT.DigitalOffice.Kernel.BrokerSupport.Configurations;
 using LT.DigitalOffice.Kernel.BrokerSupport.Extensions;
@@ -6,11 +8,7 @@ using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.BrokerSupport.Middlewares.Token;
 using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.Kernel.Helpers;
 using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
-using LT.DigitalOffice.Kernel.RedisSupport.Configurations;
-using LT.DigitalOffice.Kernel.RedisSupport.Helpers;
-using LT.DigitalOffice.Kernel.RedisSupport.Helpers.Interfaces;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -19,10 +17,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Serilog;
-using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
 
 namespace LT.DigitalOffice.FilterService
 {
@@ -111,7 +105,6 @@ namespace LT.DigitalOffice.FilterService
 	  services.AddBusinessObjects();
 
 	  services.AddControllers();
-      services.AddTransient<IRedisHelper, RedisHelper>();
 
       ConfigureMassTransit(services);
     }

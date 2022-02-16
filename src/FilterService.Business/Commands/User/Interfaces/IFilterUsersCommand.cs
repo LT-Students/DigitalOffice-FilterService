@@ -11,6 +11,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces
   [AutoInject]
   public interface IFilterUsersCommand
   {
-    Task<FindResultResponse<UserInfo>> ExecuteAsync(FilterUserService filter);
+    Task<FindResultResponse<UserInfo>> ExecuteAsync(UserFilter filter);
   }
 }

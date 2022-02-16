@@ -10,12 +10,12 @@ namespace LT.DigitalOffice.FilterService.Controllers
 {
   [Route("[controller]")]
   [ApiController]
-  public class UserServiceController : ControllerBase
+  public class UserController : ControllerBase
   {
     [HttpGet("filter")]
     public async Task<FindResultResponse<UserInfo>> GetAsync(
       [FromServices] IFilterUsersCommand command,
-      [FromQuery] FilterUserService filter)
+      [FromQuery] UserFilter filter)
     {
       return await command.ExecuteAsync(filter);
     }

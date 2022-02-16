@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LT.DigitalOffice.FilterService.Models.Dto.Request.UserService
 {
-  public record FilterUserService : BaseFindFilter
+  public record UserFilter : BaseFindFilter
   {
     [FromQuery(Name = "departmentsIds")]
     public List<Guid> DepartmentsIds { get; set; }

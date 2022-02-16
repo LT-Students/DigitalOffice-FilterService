@@ -112,7 +112,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         .Roles;
     }
 
-    private async Task<List<UserData>> GetUsersDataAsync(List<Guid> usersIds, FilterUserService filter, List<string> errors)
+    private async Task<List<UserData>> GetUsersDataAsync(List<Guid> usersIds, UserFilter filter, List<string> errors)
     {
       if (filter.DepartmentsIds is null && 
           filter.PositionsIds is null &&
@@ -172,8 +172,8 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         .ImagesData;
     }
 
-    private List<Guid> FilteredUserIds(List<Guid> officesUserIds, 
-      List<Guid> departmentsUserIds, 
+    private List<Guid> FilteredUserIds(List<Guid> officesUserIds,
+      List<Guid> departmentsUserIds,
       List<Guid> positionsUserIds,
       List<Guid> rolesUserIds)
     {
@@ -331,7 +331,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       _logger = logger;
     }
 
-    public async Task<FindResultResponse<UserInfo>> ExecuteAsync(FilterUserService filter)
+    public async Task<FindResultResponse<UserInfo>> ExecuteAsync(UserFilter filter)
     {
       FindResultResponse<UserInfo> response = new();
 
@@ -366,9 +366,9 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         List<UserData> usersData = await GetUsersDataAsync(filteredUsers, filter, errors);
 
         List<ImageData> usersImages = await GetImagesDataAsync(
-          usersData.Where(u => u.ImageId.HasValue).
-          Select(u => u.ImageId.Value).ToList(),
-          errors);
+            usersData.Where(u => u.ImageId.HasValue).
+            Select(u => u.ImageId.Value).ToList(),
+            errors);
 
         List<PositionInfo> positionInfo = new();
         List<DepartmentInfo> departmentInfo = new();
@@ -390,8 +390,8 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         if (filter.DepartmentsIds is null)
         {
           departmentData.AddRange(await GetDepartmentsDataAsync(
-            usersData.Select(u => u.Id).ToList(),
-            errors));
+              usersData.Select(u => u.Id).ToList(),
+              errors));
 
           departmentInfo.AddRange(_departmentInfoMapper.Map(departmentData));
         }

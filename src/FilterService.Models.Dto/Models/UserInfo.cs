@@ -8,6 +8,7 @@ namespace LT.DigitalOffice.FilterService.Models.Dto.Models
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string MiddleName { get; set; }
+    public string Status { get; set; }
 
     public ImageInfo Avatar { get; set; }
     public PositionInfo Position { get; set; }
