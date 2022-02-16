@@ -357,11 +357,11 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         rolesFilteredData?.SelectMany(x => x.UsersIds).ToList() ?? new List<Guid>());
 
       //ToDo add emplementation SkipCount TakeCount
-      if ((filter.RightsIds is null &&
-            filter.OfficesIds is null &&
-            filter.DepartmentsIds is null &&
-            filter.PositionsIds is null) ||
-            filteredUsers is not null)
+      if (filteredUsers is not null ||
+         (filter.RightsIds is null &&
+           filter.OfficesIds is null &&
+           filter.DepartmentsIds is null &&
+           filter.PositionsIds is null))
       {
         List<UserData> usersData = await GetUsersDataAsync(filteredUsers, filter, errors);
 
