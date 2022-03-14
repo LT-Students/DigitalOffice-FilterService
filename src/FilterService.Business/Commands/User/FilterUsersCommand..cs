@@ -116,7 +116,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     {
       if (filter.DepartmentsIds is null && 
           filter.PositionsIds is null &&
-          filter.RightsIds is null && 
+          filter.RolesIds is null && 
           filter.OfficesIds is null)
       {
         return (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
@@ -246,7 +246,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       Task<List<DepartmentFilteredData>> departmentsUsersTask = GetDepartmentFilterDataAsync(filter.DepartmentsIds, response.Errors);
       Task<List<OfficeFilteredData>> officesUsersTask = GetOfficeFilterDataAsync(filter.OfficesIds, response.Errors);
       Task<List<PositionFilteredData>> positionsUsersTask = GetPositionFilterDataAsync(filter.PositionsIds, response.Errors);
-      Task<List<RoleFilteredData>> rolesUsersTask = GetRolesFilterDataAsync(filter.RightsIds, response.Errors);
+      Task<List<RoleFilteredData>> rolesUsersTask = GetRolesFilterDataAsync(filter.RolesIds, response.Errors);
 
       await Task.WhenAll(departmentsUsersTask, officesUsersTask, positionsUsersTask, rolesUsersTask);
 
@@ -263,7 +263,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
       //ToDo add emplementation SkipCount TakeCount
       if (filteredUsers is not null ||
-         (filter.RightsIds is null &&
+         (filter.RolesIds is null &&
            filter.OfficesIds is null &&
            filter.DepartmentsIds is null &&
            filter.PositionsIds is null))
