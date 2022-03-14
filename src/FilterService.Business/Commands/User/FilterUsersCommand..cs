@@ -172,125 +172,30 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         .ImagesData;
     }
 
-    private List<Guid> FilteredUserIds(List<Guid> officesUserIds,
-      List<Guid> departmentsUserIds,
-      List<Guid> positionsUserIds,
-      List<Guid> rolesUserIds)
+    private List<Guid> FilteredUserIds(params List<Guid>[] userIds)
     {
       List<Guid> filteredUserIds = new();
-
-      if (departmentsUserIds.Any())
+      for (int i = 0; i < userIds.Length; i++)
       {
-        filteredUserIds.AddRange(departmentsUserIds);
-
-        if (officesUserIds.Any())
+        if (userIds[i].Any())
         {
-          if (!officesUserIds.Any(o => filteredUserIds.Contains(o)))
+          if (!filteredUserIds.Any())
+          {
+            filteredUserIds.AddRange(userIds[i]);
+          }
+          if (!userIds[i].Any(o => filteredUserIds.Contains(o)))
           {
             return null;
           }
 
-          filteredUserIds.AddRange(officesUserIds);
+          filteredUserIds.AddRange(userIds[i]);
 
           filteredUserIds = filteredUserIds
             .GroupBy(g => g)
             .Where(id => id.Count() > 1)
             .Select(g => g.Key).ToList();
         }
-        if (positionsUserIds.Any())
-        {
-          if (!positionsUserIds.Any(p => filteredUserIds.Contains(p)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(positionsUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key).ToList();
-        }
-        if (rolesUserIds.Any())
-        {
-          if (!rolesUserIds.Any(r => filteredUserIds.Contains(r)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(rolesUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key).ToList();
-        }
-
-        return filteredUserIds;
       }
-
-      if (officesUserIds.Any())
-      {
-        filteredUserIds.AddRange(officesUserIds);
-
-        if (positionsUserIds.Any())
-        {
-          if (!positionsUserIds.Any(p => filteredUserIds.Contains(p)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(positionsUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key)
-            .ToList();
-        }
-        if (rolesUserIds.Any())
-        {
-          if (!rolesUserIds.Any(r => filteredUserIds.Contains(r)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(rolesUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key)
-            .ToList();
-        }
-
-        return filteredUserIds;
-      }
-
-      if (positionsUserIds.Any())
-      {
-        filteredUserIds.AddRange(positionsUserIds);
-
-        if (rolesUserIds.Any())
-        {
-          if (!rolesUserIds.Any(r => filteredUserIds.Contains(r)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(rolesUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key)
-            .ToList();
-        }
-
-        return filteredUserIds;
-      }
-
-      filteredUserIds.AddRange(rolesUserIds);
 
       return filteredUserIds;
     }
