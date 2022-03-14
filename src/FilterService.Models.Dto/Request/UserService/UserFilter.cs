@@ -14,7 +14,7 @@ namespace LT.DigitalOffice.FilterService.Models.Dto.Request.UserService
     public List<Guid> PositionsIds { get; set; }
 
     [FromQuery(Name = "rolesIds")]
-    public List<Guid> RightsIds { get; set; }
+    public List<Guid> RolesIds { get; set; }
 
     [FromQuery(Name = "officesIds")]
     public List<Guid> OfficesIds { get; set; }
