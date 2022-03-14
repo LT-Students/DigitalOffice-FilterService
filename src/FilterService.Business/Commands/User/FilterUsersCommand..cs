@@ -183,7 +183,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
           {
             filteredUserIds.AddRange(userIds[i]);
           }
-          if (!userIds[i].Any(o => filteredUserIds.Contains(o)))
+          if (!userIds[i].Any(id => filteredUserIds.Contains(id)))
           {
             return null;
           }
