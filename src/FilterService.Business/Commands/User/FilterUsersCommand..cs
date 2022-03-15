@@ -116,7 +116,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     {
       if (filter.DepartmentsIds is null && 
           filter.PositionsIds is null &&
-          filter.RightsIds is null && 
+          filter.RolesIds is null && 
           filter.OfficesIds is null)
       {
         return (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
@@ -172,125 +172,30 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         .ImagesData;
     }
 
-    private List<Guid> FilteredUserIds(List<Guid> officesUserIds,
-      List<Guid> departmentsUserIds,
-      List<Guid> positionsUserIds,
-      List<Guid> rolesUserIds)
+    private List<Guid> FilteredUserIds(params List<Guid>[] userIds)
     {
       List<Guid> filteredUserIds = new();
-
-      if (departmentsUserIds.Any())
+      for (int i = 0; i < userIds.Length; i++)
       {
-        filteredUserIds.AddRange(departmentsUserIds);
-
-        if (officesUserIds.Any())
+        if (userIds[i].Any())
         {
-          if (!officesUserIds.Any(o => filteredUserIds.Contains(o)))
+          if (!filteredUserIds.Any())
+          {
+            filteredUserIds.AddRange(userIds[i]);
+          }
+          if (!userIds[i].Any(id => filteredUserIds.Contains(id)))
           {
             return null;
           }
 
-          filteredUserIds.AddRange(officesUserIds);
+          filteredUserIds.AddRange(userIds[i]);
 
           filteredUserIds = filteredUserIds
             .GroupBy(g => g)
             .Where(id => id.Count() > 1)
             .Select(g => g.Key).ToList();
         }
-        if (positionsUserIds.Any())
-        {
-          if (!positionsUserIds.Any(p => filteredUserIds.Contains(p)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(positionsUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key).ToList();
-        }
-        if (rolesUserIds.Any())
-        {
-          if (!rolesUserIds.Any(r => filteredUserIds.Contains(r)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(rolesUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key).ToList();
-        }
-
-        return filteredUserIds;
       }
-
-      if (officesUserIds.Any())
-      {
-        filteredUserIds.AddRange(officesUserIds);
-
-        if (positionsUserIds.Any())
-        {
-          if (!positionsUserIds.Any(p => filteredUserIds.Contains(p)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(positionsUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key)
-            .ToList();
-        }
-        if (rolesUserIds.Any())
-        {
-          if (!rolesUserIds.Any(r => filteredUserIds.Contains(r)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(rolesUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key)
-            .ToList();
-        }
-
-        return filteredUserIds;
-      }
-
-      if (positionsUserIds.Any())
-      {
-        filteredUserIds.AddRange(positionsUserIds);
-
-        if (rolesUserIds.Any())
-        {
-          if (!rolesUserIds.Any(r => filteredUserIds.Contains(r)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(rolesUserIds);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key)
-            .ToList();
-        }
-
-        return filteredUserIds;
-      }
-
-      filteredUserIds.AddRange(rolesUserIds);
 
       return filteredUserIds;
     }
@@ -341,7 +246,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       Task<List<DepartmentFilteredData>> departmentsUsersTask = GetDepartmentFilterDataAsync(filter.DepartmentsIds, response.Errors);
       Task<List<OfficeFilteredData>> officesUsersTask = GetOfficeFilterDataAsync(filter.OfficesIds, response.Errors);
       Task<List<PositionFilteredData>> positionsUsersTask = GetPositionFilterDataAsync(filter.PositionsIds, response.Errors);
-      Task<List<RoleFilteredData>> rolesUsersTask = GetRolesFilterDataAsync(filter.RightsIds, response.Errors);
+      Task<List<RoleFilteredData>> rolesUsersTask = GetRolesFilterDataAsync(filter.RolesIds, response.Errors);
 
       await Task.WhenAll(departmentsUsersTask, officesUsersTask, positionsUsersTask, rolesUsersTask);
 
@@ -358,7 +263,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
       //ToDo add emplementation SkipCount TakeCount
       if (filteredUsers is not null ||
-         (filter.RightsIds is null &&
+         (filter.RolesIds is null &&
            filter.OfficesIds is null &&
            filter.DepartmentsIds is null &&
            filter.PositionsIds is null))
