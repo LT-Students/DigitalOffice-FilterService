@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using LT.DigitalOffice.Kernel.Requests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LT.DigitalOffice.FilterService.Models.Dto.Request.UserService
 {
-  public record UserFilter : BaseFindFilter
+  public record UserFilter
   {
     [FromQuery(Name = "departmentsIds")]
     public List<Guid> DepartmentsIds { get; set; }
@@ -18,5 +17,8 @@ namespace LT.DigitalOffice.FilterService.Models.Dto.Request.UserService
 
     [FromQuery(Name = "officesIds")]
     public List<Guid> OfficesIds { get; set; }
+
+    [FromQuery(Name = "genderIds")]
+    public List<Guid> GenderIds { get; set; }
   }
 }

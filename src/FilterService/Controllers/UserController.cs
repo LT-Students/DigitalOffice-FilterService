@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Models;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
@@ -15,9 +14,10 @@ namespace LT.DigitalOffice.FilterService.Controllers
     [HttpGet("filter")]
     public async Task<FindResultResponse<UserInfo>> GetAsync(
       [FromServices] IFilterUsersCommand command,
-      [FromQuery] UserFilter filter)
+      [FromQuery] UserFilter filter,
+      [FromQuery] PaginationValues value)
     {
-      return await command.ExecuteAsync(filter);
+      return await command.ExecuteAsync(filter, value);
     }
   }
 }
