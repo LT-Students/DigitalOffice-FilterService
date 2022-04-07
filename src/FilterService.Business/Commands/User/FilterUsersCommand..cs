@@ -33,7 +33,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     private readonly IUserService _userService;
 
     #region private methods
-
     private List<Guid> FilteredUserIds(params List<Guid>[] userIds)
     {
       List<Guid> filteredUserIds = new();
