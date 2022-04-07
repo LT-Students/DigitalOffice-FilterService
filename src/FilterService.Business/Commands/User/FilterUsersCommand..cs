@@ -122,6 +122,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
            filter.PositionsIds is null &&
            filter.GenderIds is null))
       {
+        //может skipCount takeCount добавить для filteredUsers, а не для usersData
         List<UserData> usersData = await _userService.GetUsersDataAsync(filteredUsers, filter, value, errors);
 
         List<PositionInfo> positionInfo = new();

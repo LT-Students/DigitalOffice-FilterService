@@ -42,6 +42,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       }
 
       List<DepartmentFilteredData> departmentsData = await _globalCache.GetAsync<List<DepartmentFilteredData>>(Cache.Departments, departmentsIds.GetRedisCacheHashCode());
+
       if (departmentsData is null)
       {
         departmentsData =
@@ -58,13 +59,20 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
 
     public async Task<List<DepartmentData>> GetDepartmentsDataAsync(List<Guid> usersIds, List<string> errors)
     {
-      return
-        (await RequestHandler.ProcessRequest<IGetDepartmentsRequest, IGetDepartmentsResponse>(
+      List<DepartmentData> departmentsData = await _globalCache.GetAsync<List<DepartmentData>>(Cache.Departments, usersIds.GetRedisCacheHashCode());
+
+      if (departmentsData is null)
+      {
+        departmentsData =
+          (await RequestHandler.ProcessRequest<IGetDepartmentsRequest, IGetDepartmentsResponse>(
           _rcGetDepartmentsData,
           IGetDepartmentsRequest.CreateObj(usersIds),
           errors,
           _logger))
         .Departments;
+      }
+
+      return departmentsData;
     }
   }
 }
