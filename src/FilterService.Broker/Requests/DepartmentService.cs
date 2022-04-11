@@ -55,7 +55,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       }
       if (departmentsData is null)
       {
-        errors.Add("Cannot get Departments");
+        errors.Add("Can not filter by departments.");
       }
 
       return departmentsData;

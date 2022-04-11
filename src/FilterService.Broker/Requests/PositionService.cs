@@ -55,7 +55,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       }
       if (positionsData is null)
       {
-        errors.Add("Cannot get Positions");
+        errors.Add("Can not filter by positions.");
       }
 
       return positionsData;

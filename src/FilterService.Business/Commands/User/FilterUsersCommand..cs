@@ -7,7 +7,6 @@ using LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces;
 using LT.DigitalOffice.FilterService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Models;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
-using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Models;
@@ -15,10 +14,6 @@ using LT.DigitalOffice.Models.Broker.Models.Department;
 using LT.DigitalOffice.Models.Broker.Models.Office;
 using LT.DigitalOffice.Models.Broker.Models.Position;
 using LT.DigitalOffice.Models.Broker.Models.Right;
-using LT.DigitalOffice.Models.Broker.Requests.User;
-using LT.DigitalOffice.Models.Broker.Responses.User;
-using MassTransit;
-using Microsoft.Extensions.Logging;
 
 namespace LT.DigitalOffice.FilterService.Business.Commands.User
 {
@@ -36,8 +31,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     private readonly IPositionService _positionService;
     private readonly IRoleService _roleService;
     private readonly IUserService _userService;
-    private readonly ILogger<FilterUsersCommand> _logger;
-    private readonly IRequestClient<IGetUsersDataRequest> _rcGetUsers;
 
     #region private methods
     private List<Guid> FilteredUserIds(params List<Guid>[] userIds)
@@ -54,7 +47,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         {
           filteredUserIds.AddRange(userIds[i]);
         }
-        if (!userIds[i].Any(id => filteredUserIds.Contains(id))) 
+        if (!userIds[i].Any(id => filteredUserIds.Contains(id)))
         {
           return null;
         }
@@ -68,26 +61,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       }
 
       return filteredUserIds;
-    }
-
-    private async Task<List<UserData>> GetUsersDataAsync(
-      PaginationValues value,
-      List<string> errors)
-    {
-      List<UserData> usersData =
-        (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
-          _rcGetUsers,
-          IGetUsersDataRequest.CreateObj(new List<Guid>(), value.SkipCount, value.TakeCount),
-          errors,
-          _logger))
-        ?.UsersData;
-
-      if (usersData is null)
-      {
-        errors.Add("Cannot get Users");
-      }
-
-      return usersData;
     }
     #endregion
 
@@ -103,9 +76,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     IImageService imageService,
     IPositionService positionService,
     IRoleService roleService,
-    IUserService userService,
-    ILogger<FilterUsersCommand> logger,
-    IRequestClient<IGetUsersDataRequest> rcGetUsers)
+    IUserService userService)
     {
       _rolesInfoMapper = rolesInfoMapper;
       _userInfoMapper = userInfoMapper;
@@ -119,8 +90,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       _positionService = positionService;
       _roleService = roleService;
       _userService = userService;
-      _logger = logger;
-      _rcGetUsers = rcGetUsers;
     }
 
     public async Task<FindResultResponse<UserInfo>> ExecuteAsync(UserFilter filter, PaginationValues value)
@@ -151,14 +120,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       {
         List<UserData> usersData = new();
 
-        if (filteredUsers.Any())
-        {
-          usersData = await _userService.GetFilteredUsersDataAsync(filteredUsers, value, response.Errors) ?? new();
-        }
-        else
-        {
-          usersData = await GetUsersDataAsync(value, response.Errors) ?? new();
-        }
+        usersData = await _userService.GetFilteredUsersDataAsync(filteredUsers, value, response.Errors) ?? new();
 
         List<PositionInfo> positionInfo = new();
         List<DepartmentInfo> departmentInfo = new();
@@ -169,7 +131,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         {
           positionData.AddRange(await _positionService.GetPositionsDataAsync(
               usersData.Select(u => u.Id).ToList(),
-              response.Errors));
+              response.Errors) ?? new());
 
           positionInfo.AddRange(_positionInfoMapper.Map(positionData));
         }
@@ -190,8 +152,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         {
           departmentInfo.AddRange(_departmentInfoMapper.Map(departmentsFilteredUsers));
         }
-
-        usersData = usersData.Skip(value.SkipCount).Take(value.TakeCount).ToList();
 
         userInfo = _userInfoMapper.Map(
           _rolesInfoMapper.Map(rolesFilteredData),
@@ -214,9 +174,10 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         userInfo = _userInfoMapper.Map(userInfo, usersData, _imageInfoMapper.Map(usersImages));
       }
 
+      //ToDo add total Count
       response.Body = userInfo;
 
-      response.TotalCount = response.Body.Count();
+      response.TotalCount = userInfo.Count();
       response.Status = response.Errors.Any()
         ? OperationResultStatusType.PartialSuccess
         : OperationResultStatusType.FullSuccess;

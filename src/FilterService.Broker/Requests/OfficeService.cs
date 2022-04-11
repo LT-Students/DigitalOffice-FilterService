@@ -52,7 +52,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       }
       if (officesData is null)
       {
-        errors.Add("Cannot get Offices");
+        errors.Add("Can not filter by offices.");
       }
 
       return officesData;

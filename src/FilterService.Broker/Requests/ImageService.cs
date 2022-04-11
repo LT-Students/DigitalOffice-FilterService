@@ -41,11 +41,6 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
           _logger))
         ?.ImagesData;
 
-      if (imagesData is null)
-      {
-        errors.Add("Cannot get Images");
-      }
-
       return imagesData;
     }
   }

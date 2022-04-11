@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LT.DigitalOffice.FilterService.Broker.Requests.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
@@ -36,14 +37,9 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       PaginationValues value,
       List<string> errors)
     {
-      if (usersIds is null)
-      {
-        return null;
-      }
-
       List<UserData> usersData = await _globalCache.GetAsync<List<UserData>>(Cache.Users, usersIds.GetRedisCacheHashCode());
 
-      if (usersData is null)
+      if (usersData is null || !usersIds.Any())
       {
         usersData =
           (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
@@ -52,10 +48,6 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
             errors,
             _logger))
           ?.UsersData;
-      }
-      if (usersData is null)
-      {
-        errors.Add("Cannot get Users");
       }
 
       return usersData;

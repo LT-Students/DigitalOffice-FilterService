@@ -52,7 +52,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       }
       if (rolesData is null)
       {
-        errors.Add("Cannot get Roles");
+        errors.Add("Can not filter by roles");
       }
 
       return rolesData;
