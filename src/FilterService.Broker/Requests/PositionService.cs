@@ -80,10 +80,6 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
             _logger))
           ?.Positions;
       }
-      if (positionsData is null)
-      {
-        errors.Add("Cannot get Positions");
-      }
 
       return positionsData;
     }

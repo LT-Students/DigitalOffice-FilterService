@@ -80,11 +80,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
             _logger))
           ?.Departments;
       }
-      if (departmentsData is null)
-      {
-        errors.Add("Cannot get Departments");
-      }
-
+      
       return departmentsData;
     }
   }
