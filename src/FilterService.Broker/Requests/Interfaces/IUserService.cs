@@ -10,9 +10,8 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests.Interfaces
   [AutoInject]
   public interface IUserService
   {
-    Task<List<UserData>> GetUsersDataAsync(
+    Task<List<UserData>> GetFilteredUsersDataAsync(
       List<Guid> usersIds,
-      UserFilter filter,
       PaginationValues value,
       List<string> errors);
   }

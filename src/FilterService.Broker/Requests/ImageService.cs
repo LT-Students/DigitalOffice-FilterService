@@ -33,13 +33,20 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
         return null;
       }
 
-      return
+      List<ImageData> imagesData =
         (await RequestHandler.ProcessRequest<IGetImagesRequest, IGetImagesResponse>(
           _rcGetImages,
           IGetImagesRequest.CreateObj(usersImageIds, ImageSource.User),
           errors,
           _logger))
-        .ImagesData;
+        ?.ImagesData;
+
+      if (imagesData is null)
+      {
+        errors.Add("Cannot get Images");
+      }
+
+      return imagesData;
     }
   }
 }

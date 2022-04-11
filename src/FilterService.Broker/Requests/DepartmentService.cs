@@ -47,11 +47,15 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       {
         departmentsData =
           (await RequestHandler.ProcessRequest<IFilterDepartmentsRequest, IFilterDepartmentsResponse>(
-          _rcGetDepartments,
-          IFilterDepartmentsRequest.CreateObj(departmentsIds),
-          errors,
-          _logger))
-        .Departments;
+            _rcGetDepartments,
+            IFilterDepartmentsRequest.CreateObj(departmentsIds),
+            errors,
+            _logger))
+          ?.Departments;
+      }
+      if (departmentsData is null)
+      {
+        errors.Add("Cannot get Departments");
       }
 
       return departmentsData;
@@ -59,17 +63,26 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
 
     public async Task<List<DepartmentData>> GetDepartmentsDataAsync(List<Guid> usersIds, List<string> errors)
     {
+      if (!usersIds.Any())
+      {
+        return null;
+      }
+
       List<DepartmentData> departmentsData = await _globalCache.GetAsync<List<DepartmentData>>(Cache.Departments, usersIds.GetRedisCacheHashCode());
 
       if (departmentsData is null)
       {
         departmentsData =
           (await RequestHandler.ProcessRequest<IGetDepartmentsRequest, IGetDepartmentsResponse>(
-          _rcGetDepartmentsData,
-          IGetDepartmentsRequest.CreateObj(usersIds),
-          errors,
-          _logger))
-        .Departments;
+            _rcGetDepartmentsData,
+            IGetDepartmentsRequest.CreateObj(usersIds),
+            errors,
+            _logger))
+          ?.Departments;
+      }
+      if (departmentsData is null)
+      {
+        errors.Add("Cannot get Departments");
       }
 
       return departmentsData;

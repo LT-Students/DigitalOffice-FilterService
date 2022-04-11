@@ -31,27 +31,18 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       _rcGetUsers = rcGetUsers;
     }
 
-    public async Task<List<UserData>> GetUsersDataAsync(
+    public async Task<List<UserData>> GetFilteredUsersDataAsync(
       List<Guid> usersIds,
-      UserFilter filter,
       PaginationValues value,
       List<string> errors)
     {
-      if (filter.DepartmentsIds is null &&
-          filter.PositionsIds is null &&
-          filter.RolesIds is null &&
-          filter.OfficesIds is null)
+      if (usersIds is null)
       {
-        return
-          (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
-            _rcGetUsers,
-            IGetUsersDataRequest.CreateObj(new List<Guid>(), value.SkipCount, value.TakeCount),
-            errors,
-            _logger))
-          .UsersData;
+        return null;
       }
 
       List<UserData> usersData = await _globalCache.GetAsync<List<UserData>>(Cache.Users, usersIds.GetRedisCacheHashCode());
+
       if (usersData is null)
       {
         usersData =
@@ -60,7 +51,11 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
             IGetUsersDataRequest.CreateObj(usersIds, value.SkipCount, value.TakeCount),
             errors,
             _logger))
-          .UsersData;
+          ?.UsersData;
+      }
+      if (usersData is null)
+      {
+        errors.Add("Cannot get Users");
       }
 
       return usersData;

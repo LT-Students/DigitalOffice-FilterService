@@ -25,6 +25,10 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
       List<RoleFilteredData> rolesFilteredData,
       List<OfficeFilteredData> officeFilteredData)
     {
+      if (usersData is null)
+      {
+        return null;
+      }
 
       return usersData.Select(x => new UserInfo
       {
@@ -47,6 +51,11 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
       List<UserData> usersData,
       List<ImageInfo> imagesInfos)
     {
+      if (!usersInfos.Any() || usersInfos is null)
+      {
+        return new();
+      }
+
       usersInfos.ForEach(
         ui => ui.Avatar = imagesInfos?.FirstOrDefault(
           i => i.Id == usersData.FirstOrDefault(ud => ud.Id == ui.Id).ImageId));

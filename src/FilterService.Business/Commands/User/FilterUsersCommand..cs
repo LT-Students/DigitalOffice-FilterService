@@ -7,6 +7,7 @@ using LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces;
 using LT.DigitalOffice.FilterService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Models;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
+using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Models;
@@ -14,6 +15,10 @@ using LT.DigitalOffice.Models.Broker.Models.Department;
 using LT.DigitalOffice.Models.Broker.Models.Office;
 using LT.DigitalOffice.Models.Broker.Models.Position;
 using LT.DigitalOffice.Models.Broker.Models.Right;
+using LT.DigitalOffice.Models.Broker.Requests.User;
+using LT.DigitalOffice.Models.Broker.Responses.User;
+using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace LT.DigitalOffice.FilterService.Business.Commands.User
 {
@@ -31,50 +36,76 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     private readonly IPositionService _positionService;
     private readonly IRoleService _roleService;
     private readonly IUserService _userService;
+    private readonly ILogger<FilterUsersCommand> _logger;
+    private readonly IRequestClient<IGetUsersDataRequest> _rcGetUsers;
 
     #region private methods
     private List<Guid> FilteredUserIds(params List<Guid>[] userIds)
     {
       List<Guid> filteredUserIds = new();
+
       for (int i = 0; i < userIds.Length; i++)
       {
-        if (userIds[i].Any())
+        if (userIds[i] is null)
         {
-          if (!filteredUserIds.Any())
-          {
-            filteredUserIds.AddRange(userIds[i]);
-          }
-          if (!userIds[i].Any(id => filteredUserIds.Contains(id)))
-          {
-            return null;
-          }
-
-          filteredUserIds.AddRange(userIds[i]);
-
-          filteredUserIds = filteredUserIds
-            .GroupBy(g => g)
-            .Where(id => id.Count() > 1)
-            .Select(g => g.Key).ToList();
+          continue;
         }
+        if (!filteredUserIds.Any())
+        {
+          filteredUserIds.AddRange(userIds[i]);
+        }
+        if (!userIds[i].Any(id => filteredUserIds.Contains(id))) 
+        {
+          return null;
+        }
+
+        filteredUserIds.AddRange(userIds[i]);
+
+        filteredUserIds = filteredUserIds
+          .GroupBy(g => g)
+          .Where(id => id.Count() > 1)
+          .Select(g => g.Key).ToList();
       }
 
       return filteredUserIds;
     }
+
+    private async Task<List<UserData>> GetUsersDataAsync(
+      PaginationValues value,
+      List<string> errors)
+    {
+      List<UserData> usersData =
+        (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
+          _rcGetUsers,
+          IGetUsersDataRequest.CreateObj(new List<Guid>(), value.SkipCount, value.TakeCount),
+          errors,
+          _logger))
+        ?.UsersData;
+
+      if (usersData is null)
+      {
+        errors.Add("Cannot get Users");
+      }
+
+      return usersData;
+    }
     #endregion
 
     public FilterUsersCommand(
-      IUserInfoMapper userInfoMapper,
-      IImageInfoMapper imageInfoMapper,
-      IPositionInfoMapper positionInfoMapper,
-      IDepartmentInfoMapper departmentInfoMapper,
-      IOfficeInfoMapper officeInfoMapper,
-      IRolesInfoMapper rolesInfoMapper,
-      IOfficeService officeService,
-      IDepartmentService departmentService,
-      IImageService imageService,
-      IPositionService positionService,
-      IRoleService roleService,
-      IUserService userService)
+    IUserInfoMapper userInfoMapper,
+    IImageInfoMapper imageInfoMapper,
+    IPositionInfoMapper positionInfoMapper,
+    IDepartmentInfoMapper departmentInfoMapper,
+    IOfficeInfoMapper officeInfoMapper,
+    IRolesInfoMapper rolesInfoMapper,
+    IOfficeService officeService,
+    IDepartmentService departmentService,
+    IImageService imageService,
+    IPositionService positionService,
+    IRoleService roleService,
+    IUserService userService,
+    ILogger<FilterUsersCommand> logger,
+    IRequestClient<IGetUsersDataRequest> rcGetUsers)
     {
       _rolesInfoMapper = rolesInfoMapper;
       _userInfoMapper = userInfoMapper;
@@ -88,6 +119,8 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       _positionService = positionService;
       _roleService = roleService;
       _userService = userService;
+      _logger = logger;
+      _rcGetUsers = rcGetUsers;
     }
 
     public async Task<FindResultResponse<UserInfo>> ExecuteAsync(UserFilter filter, PaginationValues value)
@@ -95,7 +128,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       FindResultResponse<UserInfo> response = new();
 
       List<UserInfo> userInfo = new();
-      List<string> errors = new();
 
       Task<List<DepartmentFilteredData>> departmentsUsersTask = _departmentService.GetDepartmentFilterDataAsync(filter.DepartmentsIds, response.Errors);
       Task<List<OfficeFilteredData>> officesUsersTask = _officeService.GetOfficeFilterDataAsync(filter.OfficesIds, response.Errors);
@@ -110,20 +142,23 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       List<RoleFilteredData> rolesFilteredData = await rolesUsersTask;
 
       List<Guid> filteredUsers = FilteredUserIds(
-        officeFilteredData?.SelectMany(x => x.UsersIds).ToList() ?? new List<Guid>(),
-        departmentsFilteredUsers?.SelectMany(x => x.UsersIds).ToList() ?? new List<Guid>(),
-        positionsFilteredData?.SelectMany(x => x.UsersIds).ToList() ?? new List<Guid>(),
-        rolesFilteredData?.SelectMany(x => x.UsersIds).ToList() ?? new List<Guid>());
+        officeFilteredData?.SelectMany(x => x.UsersIds).ToList(),
+        departmentsFilteredUsers?.SelectMany(x => x.UsersIds).ToList(),
+        positionsFilteredData?.SelectMany(x => x.UsersIds).ToList(),
+        rolesFilteredData?.SelectMany(x => x.UsersIds).ToList());
 
-      if (filteredUsers is not null ||
-         (filter.RolesIds is null &&
-           filter.OfficesIds is null &&
-           filter.DepartmentsIds is null &&
-           filter.PositionsIds is null &&
-           filter.GenderIds is null))
+      if (filteredUsers is not null)
       {
-        //может skipCount takeCount добавить для filteredUsers, а не для usersData
-        List<UserData> usersData = await _userService.GetUsersDataAsync(filteredUsers, filter, value, errors);
+        List<UserData> usersData = new();
+
+        if (filteredUsers.Any())
+        {
+          usersData = await _userService.GetFilteredUsersDataAsync(filteredUsers, value, response.Errors) ?? new();
+        }
+        else
+        {
+          usersData = await GetUsersDataAsync(value, response.Errors) ?? new();
+        }
 
         List<PositionInfo> positionInfo = new();
         List<DepartmentInfo> departmentInfo = new();
@@ -133,7 +168,8 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         if (filter.PositionsIds is null)
         {
           positionData.AddRange(await _positionService.GetPositionsDataAsync(
-              usersData.Select(u => u.Id).ToList(), errors));
+              usersData.Select(u => u.Id).ToList(),
+              response.Errors));
 
           positionInfo.AddRange(_positionInfoMapper.Map(positionData));
         }
@@ -146,7 +182,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         {
           departmentData.AddRange(await _departmentService.GetDepartmentsDataAsync(
               usersData.Select(u => u.Id).ToList(),
-              errors));
+              response.Errors) ?? new());
 
           departmentInfo.AddRange(_departmentInfoMapper.Map(departmentData));
         }
@@ -173,7 +209,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         List<ImageData> usersImages = await _imageService.GetImagesDataAsync(
            usersData.Where(u => u.ImageId.HasValue).
            Select(u => u.ImageId.Value).ToList(),
-           errors);
+           response.Errors);
 
         userInfo = _userInfoMapper.Map(userInfo, usersData, _imageInfoMapper.Map(usersImages));
       }

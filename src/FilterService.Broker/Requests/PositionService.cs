@@ -51,7 +51,11 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
             IFilterPositionsRequest.CreateObj(positionsIds),
             errors,
             _logger))
-          .Positions;
+          ?.Positions;
+      }
+      if (positionsData is null)
+      {
+        errors.Add("Cannot get Positions");
       }
 
       return positionsData;
@@ -59,17 +63,26 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
 
     public async Task<List<PositionData>> GetPositionsDataAsync(List<Guid> usersIds, List<string> errors)
     {
+      if (!usersIds.Any())
+      {
+        return null;
+      }
+
       List<PositionData> positionsData = await _globalCache.GetAsync<List<PositionData>>(Cache.Positions, usersIds.GetRedisCacheHashCode());
 
       if (positionsData is null)
       {
         positionsData =
-            (await RequestHandler.ProcessRequest<IGetPositionsRequest, IGetPositionsResponse>(
+          (await RequestHandler.ProcessRequest<IGetPositionsRequest, IGetPositionsResponse>(
             _rcGetPositionsData,
             IGetPositionsRequest.CreateObj(usersIds),
             errors,
             _logger))
-          .Positions;
+          ?.Positions;
+      }
+      if (positionsData is null)
+      {
+        errors.Add("Cannot get Positions");
       }
 
       return positionsData;

@@ -39,6 +39,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       }
 
       List<RoleFilteredData> rolesData = await _globalCache.GetAsync<List<RoleFilteredData>>(Cache.Rights, roleIds.GetRedisCacheHashCode());
+
       if (rolesData is null)
       {
         rolesData =
@@ -47,7 +48,11 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
             IFilterRolesRequest.CreateObj(roleIds),
             errors,
             _logger))
-          .Roles;
+          ?.Roles;
+      }
+      if (rolesData is null)
+      {
+        errors.Add("Cannot get Roles");
       }
 
       return rolesData;

@@ -39,6 +39,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       }
 
       List<OfficeFilteredData> officesData = await _globalCache.GetAsync<List<OfficeFilteredData>>(Cache.Offices, officesIds.GetRedisCacheHashCode());
+
       if (officesData is null)
       {
         officesData =
@@ -47,7 +48,11 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
             IFilterOfficesRequest.CreateObj(officesIds),
             errors,
             _logger))
-          .Offices;
+          ?.Offices;
+      }
+      if (officesData is null)
+      {
+        errors.Add("Cannot get Offices");
       }
 
       return officesData;
