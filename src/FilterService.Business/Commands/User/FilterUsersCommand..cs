@@ -118,9 +118,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
       if (filteredUsers is not null)
       {
-        List<UserData> usersData = new();
-
-        usersData = await _userService.GetFilteredUsersDataAsync(filteredUsers, value, response.Errors) ?? new();
+        (List<UserData> usersData, int? totalCount) = await _userService.GetFilteredUsersDataAsync(filteredUsers, value, response.Errors);
 
         List<PositionInfo> positionInfo = new();
         List<DepartmentInfo> departmentInfo = new();
@@ -172,12 +170,11 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
            response.Errors);
 
         userInfo = _userInfoMapper.Map(userInfo, usersData, _imageInfoMapper.Map(usersImages));
+        response.TotalCount = totalCount.Value;
       }
 
-      //ToDo add total Count
       response.Body = userInfo;
 
-      response.TotalCount = userInfo.Count();
       response.Status = response.Errors.Any()
         ? OperationResultStatusType.PartialSuccess
         : OperationResultStatusType.FullSuccess;

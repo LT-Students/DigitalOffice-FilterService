@@ -32,25 +32,29 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       _rcGetUsers = rcGetUsers;
     }
 
-    public async Task<List<UserData>> GetFilteredUsersDataAsync(
+    public async Task<(List<UserData> usersData, int? usersCount)> GetFilteredUsersDataAsync(
       List<Guid> usersIds,
       PaginationValues value,
       List<string> errors)
     {
-      List<UserData> usersData = await _globalCache.GetAsync<List<UserData>>(Cache.Users, usersIds.GetRedisCacheHashCode());
+      (List<UserData> usersData, int? usersCount) =
+        await _globalCache.GetAsync<(List<UserData> usersData, int? usersCount)>
+          (Cache.Users, usersIds.GetRedisCacheHashCode());
 
       if (usersData is null || !usersIds.Any())
       {
-        usersData =
+        IGetUsersDataResponse usersDataResponse =
           (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
             _rcGetUsers,
             IGetUsersDataRequest.CreateObj(usersIds, value.SkipCount, value.TakeCount),
             errors,
-            _logger))
-          ?.UsersData;
+            _logger));
+
+        usersData = usersDataResponse is not null ? usersDataResponse.UsersData : new();
+        usersCount = usersDataResponse is not null ? usersDataResponse.TotalCount : 0;
       }
 
-      return usersData;
+      return (usersData, usersCount);
     }
   }
 }
