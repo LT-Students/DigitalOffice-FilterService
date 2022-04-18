@@ -23,8 +23,8 @@ namespace LT.DigitalOffice.FilterService.Models.Dto.Configurations
     [AutoInjectRequest(typeof(IFilterRolesRequest))]
     public string FilterRolesEndpoint { get; set; }
 
-    [AutoInjectRequest(typeof(IGetUsersDataRequest))]
-    public string GetUsersDataEndpoint { get; set; }
+    [AutoInjectRequest(typeof(IFilteredUsersDataRequest))]
+    public string FilterUsersDataEndpoint { get; set; }
 
     [AutoInjectRequest(typeof(IGetImagesRequest))]
     public string GetImagesEndpoint { get; set; }

@@ -20,33 +20,33 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
   {
     private readonly ILogger<UserService> _logger;
     private readonly IGlobalCacheRepository _globalCache;
-    private readonly IRequestClient<IGetUsersDataRequest> _rcGetUsers;
+    private readonly IRequestClient<IFilteredUsersDataRequest> _rcGetUsers;
 
     public UserService(
       ILogger<UserService> logger,
       IGlobalCacheRepository globalCache,
-      IRequestClient<IGetUsersDataRequest> rcGetUsers)
+      IRequestClient<IFilteredUsersDataRequest> rcGetUsers)
     {
       _logger = logger;
       _globalCache = globalCache;
       _rcGetUsers = rcGetUsers;
     }
 
-    public async Task<(List<UserData> usersData, int? usersCount)> GetFilteredUsersDataAsync(
+    public async Task<(List<UserData> usersData, int usersCount)> GetFilteredUsersDataAsync(
       List<Guid> usersIds,
       PaginationValues value,
       List<string> errors)
     {
-      (List<UserData> usersData, int? usersCount) =
-        await _globalCache.GetAsync<(List<UserData> usersData, int? usersCount)>
+      (List<UserData> usersData, int usersCount) =
+        await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
           (Cache.Users, usersIds.GetRedisCacheHashCode());
 
       if (usersData is null || !usersIds.Any())
       {
-        IGetUsersDataResponse usersDataResponse =
-          (await RequestHandler.ProcessRequest<IGetUsersDataRequest, IGetUsersDataResponse>(
+        IFilteredUsersDataResponse usersDataResponse =
+          (await RequestHandler.ProcessRequest<IFilteredUsersDataRequest, IFilteredUsersDataResponse>(
             _rcGetUsers,
-            IGetUsersDataRequest.CreateObj(usersIds, value.SkipCount, value.TakeCount),
+            IFilteredUsersDataRequest.CreateObj(usersIds, value.SkipCount, value.TakeCount),
             errors,
             _logger));
 
