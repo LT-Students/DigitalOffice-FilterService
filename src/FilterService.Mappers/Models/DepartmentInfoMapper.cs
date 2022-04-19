@@ -24,9 +24,9 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
 
     public List<DepartmentInfo> Map(List<DepartmentFilteredData> departmentFilteredData)
     {
-      if (!departmentFilteredData.Any())
+      if (departmentFilteredData is null)
       {
-        return new();
+        return null;
       }
 
       return departmentFilteredData.Select(x => new DepartmentInfo

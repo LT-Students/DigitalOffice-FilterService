@@ -10,9 +10,9 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
   {
     public List<PositionInfo> Map(List<PositionFilteredData> positionFilteredData)
     {
-      if (!positionFilteredData.Any())
+      if (positionFilteredData is null)
       {
-        return new();
+        return null;
       }
 
       return positionFilteredData.Select(x => new PositionInfo

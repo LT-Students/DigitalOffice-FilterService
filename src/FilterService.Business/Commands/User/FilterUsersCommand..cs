@@ -135,7 +135,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         }
         else
         {
-          positionInfo.AddRange(_positionInfoMapper.Map(positionsFilteredData));
+          positionInfo.AddRange(_positionInfoMapper.Map(positionsFilteredData) ?? new());
         }
 
         if (filter.DepartmentsIds is null)
@@ -148,7 +148,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         }
         else
         {
-          departmentInfo.AddRange(_departmentInfoMapper.Map(departmentsFilteredUsers));
+          departmentInfo.AddRange(_departmentInfoMapper.Map(departmentsFilteredUsers) ?? new());
         }
 
         userInfo = _userInfoMapper.Map(
