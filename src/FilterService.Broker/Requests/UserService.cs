@@ -41,7 +41,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
         await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
           (Cache.Users, usersIds.GetRedisCacheHashCode());
 
-      if (usersData is null || !usersIds.Any())
+      if (usersData is null)
       {
         IFilteredUsersDataResponse usersDataResponse =
           (await RequestHandler.ProcessRequest<IFilteredUsersDataRequest, IFilteredUsersDataResponse>(
