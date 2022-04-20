@@ -12,6 +12,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests.Interfaces
   {
     Task<(List<UserData> usersData, int usersCount)> GetFilteredUsersDataAsync(
       List<Guid> usersIds,
+      UserFilter filter,
       PaginationValues value,
       List<string> errors);
   }

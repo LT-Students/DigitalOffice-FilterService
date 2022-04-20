@@ -118,7 +118,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
       if (filteredUsers is not null)
       {
-        (List<UserData> usersData, int? totalCount) = await _userService.GetFilteredUsersDataAsync(filteredUsers, value, response.Errors);
+        (List<UserData> usersData, int? totalCount) = await _userService.GetFilteredUsersDataAsync(filteredUsers, filter, value, response.Errors);
 
         List<PositionInfo> positionInfo = new();
         List<DepartmentInfo> departmentInfo = new();
