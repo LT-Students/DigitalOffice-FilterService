@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using LT.DigitalOffice.FilterService.Broker.Requests.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
@@ -34,12 +33,25 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
 
     public async Task<(List<UserData> usersData, int usersCount)> GetFilteredUsersDataAsync(
       List<Guid> usersIds,
+      UserFilter filter,
       PaginationValues value,
       List<string> errors)
     {
-      (List<UserData> usersData, int usersCount) =
-        await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
-          (Cache.Users, usersIds.GetRedisCacheHashCode());
+      List<UserData> usersData = new();
+      int usersCount = 0;
+
+      if (filter.AscendingSort.HasValue)
+      {
+        (usersData, usersCount) =
+          await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
+            (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount, filter.AscendingSort));
+      }
+      else
+      {
+        (usersData, usersCount) =
+            await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
+              (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount));
+      }
 
       if (usersData is null)
       {
@@ -50,8 +62,8 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
             errors,
             _logger));
 
-        usersData = usersDataResponse is not null ? usersDataResponse.UsersData : new();
-        usersCount = usersDataResponse is not null ? usersDataResponse.TotalCount : 0;
+        usersData = usersDataResponse is not null ? usersDataResponse.UsersData : usersData;
+        usersCount = usersDataResponse is not null ? usersDataResponse.TotalCount : usersCount;
       }
 
       return (usersData, usersCount);
