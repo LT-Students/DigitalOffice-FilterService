@@ -13,7 +13,6 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models.Interfaces
   public interface IUserInfoMapper
   {
     List<UserInfo> Map(
-      List<ImageInfo> imagesInfo,
       List<RolesInfo> rolesInfo,
       List<OfficeInfo> officeInfo,
       List<UserData> usersData,
@@ -25,5 +24,10 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models.Interfaces
       List<DepartmentInfo> departmentInfo,
       List<RoleFilteredData> rolesFilteredData,
       List<OfficeFilteredData> officeFilteredData);
+
+    List<UserInfo> Map(
+      List<UserInfo> usersInfos,
+      List<UserData> usersData,
+      List<ImageInfo> imagesInfo);
   }
 }

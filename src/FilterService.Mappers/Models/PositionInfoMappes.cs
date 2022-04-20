@@ -10,6 +10,11 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
   {
     public List<PositionInfo> Map(List<PositionFilteredData> positionFilteredData)
     {
+      if (positionFilteredData is null)
+      {
+        return null;
+      }
+
       return positionFilteredData.Select(x => new PositionInfo
       {
         Id = x.Id,
@@ -19,6 +24,11 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
 
     public List<PositionInfo> Map(List<PositionData> positionData)
     {
+      if (!positionData.Any())
+      {
+        return new();
+      }
+
       return positionData.Select(x => new PositionInfo
       {
         Id = x.Id,

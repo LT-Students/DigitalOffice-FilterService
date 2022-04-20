@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LT.DigitalOffice.FilterService.Models.Dto.Models;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
 using LT.DigitalOffice.Kernel.Attributes;
@@ -11,6 +9,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces
   [AutoInject]
   public interface IFilterUsersCommand
   {
-    Task<FindResultResponse<UserInfo>> ExecuteAsync(UserFilter filter);
+    Task<FindResultResponse<UserInfo>> ExecuteAsync(UserFilter filter, PaginationValues value);
   }
 }

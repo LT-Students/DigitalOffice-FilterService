@@ -10,6 +10,11 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
   {
     public List<DepartmentInfo> Map(List<DepartmentData> departmentData)
     {
+      if (!departmentData.Any())
+      {
+        return new();
+      }
+
       return departmentData.Select(x => new DepartmentInfo
       {
         Id = x.Id,
@@ -19,6 +24,11 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
 
     public List<DepartmentInfo> Map(List<DepartmentFilteredData> departmentFilteredData)
     {
+      if (departmentFilteredData is null)
+      {
+        return null;
+      }
+
       return departmentFilteredData.Select(x => new DepartmentInfo
       {
         Id = x.Id,
