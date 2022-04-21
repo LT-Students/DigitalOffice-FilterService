@@ -40,11 +40,11 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       List<UserData> usersData = new();
       int usersCount = 0;
 
-      if (filter.AscendingSort.HasValue)
+      if (filter.IsAscendingSort.HasValue)
       {
         (usersData, usersCount) =
           await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
-            (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount, filter.AscendingSort));
+            (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount, filter.IsAscendingSort));
       }
       else
       {
