@@ -2,6 +2,6 @@
 {
   public record UsersSearchParameters
   {
-    public string LastName { get; set; }
+    public string FullNameIncludeSubstring { get; set; }
   }
 }

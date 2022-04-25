@@ -121,7 +121,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
       if (filteredUsers is not null)
       {
-        (List<UserData> usersData, int? totalCount) = await _userService.GetFilteredUsersDataAsync(filteredUsers, filter, value, response.Errors);
+        (List<UserData> usersData, int? totalCount) = await _userService.GetFilteredUsersDataAsync(filteredUsers, filter, value, parameters, response.Errors);
 
         List<PositionInfo> positionInfo = new();
         List<DepartmentInfo> departmentInfo = new();
@@ -175,7 +175,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
         userInfo = _userInfoMapper.Map(userInfo, usersData, _imageInfoMapper.Map(usersImages));
         response.TotalCount = totalCount.Value;
 
-        if (parameters.LastName is not null && parameters.LastName.Trim().Any())
+        /*if (parameters.LastName is not null && parameters.LastName.Trim().Any())
         {
           userInfo =
             userInfo.Where(
@@ -184,7 +184,7 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
             .ToList();
 
           response.TotalCount = userInfo.Count;
-        }
+        }*/
       }
 
       response.Body = userInfo;
