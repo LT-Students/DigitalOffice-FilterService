@@ -174,17 +174,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
         userInfo = _userInfoMapper.Map(userInfo, usersData, _imageInfoMapper.Map(usersImages));
         response.TotalCount = totalCount.Value;
-
-        /*if (parameters.LastName is not null && parameters.LastName.Trim().Any())
-        {
-          userInfo =
-            userInfo.Where(
-              u => u.LastName.ToLower()
-              .StartsWith(parameters.LastName.Trim().ToLower()))
-            .ToList();
-
-          response.TotalCount = userInfo.Count;
-        }*/
       }
 
       response.Body = userInfo;
