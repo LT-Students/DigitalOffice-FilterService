@@ -9,6 +9,9 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces
   [AutoInject]
   public interface IFilterUsersCommand
   {
-    Task<FindResultResponse<UserInfo>> ExecuteAsync(UserFilter filter, PaginationValues value);
+    Task<FindResultResponse<UserInfo>> ExecuteAsync(
+      UserFilter filter,
+      PaginationValues value,
+      UsersSearchParameters parameters);
   }
 }
