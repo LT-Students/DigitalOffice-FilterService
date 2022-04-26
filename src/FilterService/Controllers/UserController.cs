@@ -15,10 +15,9 @@ namespace LT.DigitalOffice.FilterService.Controllers
     public async Task<FindResultResponse<UserInfo>> GetAsync(
       [FromServices] IFilterUsersCommand command,
       [FromQuery] UserFilter filter,
-      [FromQuery] PaginationValues value,
-      [FromQuery] UsersSearchParameters parameters)
+      [FromQuery] PaginationValues value)
     {
-      return await command.ExecuteAsync(filter, value, parameters);
+      return await command.ExecuteAsync(filter, value);
     }
   }
 }

@@ -11,7 +11,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces
   {
     Task<FindResultResponse<UserInfo>> ExecuteAsync(
       UserFilter filter,
-      PaginationValues value,
-      UsersSearchParameters parameters);
+      PaginationValues value);
   }
 }
