@@ -14,7 +14,6 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests.Interfaces
       List<Guid> usersIds,
       UserFilter filter,
       PaginationValues value,
-      UsersSearchParameters parameters,
       List<string> errors);
   }
 }

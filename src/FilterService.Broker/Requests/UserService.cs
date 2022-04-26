@@ -35,7 +35,6 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       List<Guid> usersIds,
       UserFilter filter,
       PaginationValues value,
-      UsersSearchParameters parameters,
       List<string> errors)
     {
       List<UserData> usersData = new();
@@ -60,11 +59,11 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
           (await RequestHandler.ProcessRequest<IFilteredUsersDataRequest, IFilteredUsersDataResponse>(
             _rcGetUsers,
             IFilteredUsersDataRequest.CreateObj(
-              usersIds, 
+              usersIds,
               value.SkipCount,
               value.TakeCount,
               filter.IsAscendingSort,
-              parameters.FullNameIncludeSubstring),
+              filter.FullNameIncludeSubstring),
             errors,
             _logger));
 

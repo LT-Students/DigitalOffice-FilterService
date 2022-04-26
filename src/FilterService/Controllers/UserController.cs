@@ -16,7 +16,7 @@ namespace LT.DigitalOffice.FilterService.Controllers
       [FromServices] IFilterUsersCommand command,
       [FromQuery] UserFilter filter,
       [FromQuery] PaginationValues value,
-      [FromBody] UsersSearchParameters parameters)
+      [FromQuery] UsersSearchParameters parameters)
     {
       return await command.ExecuteAsync(filter, value, parameters);
     }
