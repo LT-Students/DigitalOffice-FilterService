@@ -44,13 +44,13 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       {
         (usersData, usersCount) =
           await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
-            (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount, filter.IsAscendingSort));
+            (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount, filter.IsAscendingSort, filter.FullNameIncludeSubstring ?? string.Empty));
       }
       else
       {
         (usersData, usersCount) =
             await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
-              (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount));
+              (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount, filter.FullNameIncludeSubstring ?? string.Empty));
       }
 
       if (usersData is null)
