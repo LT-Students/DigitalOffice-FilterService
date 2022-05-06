@@ -40,24 +40,25 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       List<UserData> usersData = new();
       int usersCount = 0;
 
-      if (filter.IsAscendingSort.HasValue)
+      if (filter.FullNameIncludeSubstring is null)
       {
-        (usersData, usersCount) =
-          await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
-            (Cache.Users, usersIds.GetRedisCacheHashCode(
-              value.SkipCount,
-              value.TakeCount,
-              filter.IsAscendingSort,
-              filter.FullNameIncludeSubstring ?? string.Empty));
-      }
-      else
-      {
-        (usersData, usersCount) =
+        if (filter.IsAscendingSort.HasValue)
+        {
+          (usersData, usersCount) =
             await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
               (Cache.Users, usersIds.GetRedisCacheHashCode(
                 value.SkipCount,
                 value.TakeCount,
-                filter.FullNameIncludeSubstring ?? string.Empty));
+                filter.IsAscendingSort));
+        }
+        else
+        {
+          (usersData, usersCount) =
+              await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
+                (Cache.Users, usersIds.GetRedisCacheHashCode(
+                  value.SkipCount,
+                  value.TakeCount));
+        }
       }
 
       if (usersData is null)
