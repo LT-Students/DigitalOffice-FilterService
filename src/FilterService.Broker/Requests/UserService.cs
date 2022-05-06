@@ -38,7 +38,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       PaginationValues value,
       List<string> errors)
     {
-      List<UserData> usersData = new();
+      List<UserData> usersData = null;
       int usersCount = 0;
 
       if (filter.FullNameIncludeSubstring is null)
@@ -62,7 +62,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
         }
       }
 
-      if (usersData is null || !usersData.Any())
+      if (usersData is null)
       {
         IFilteredUsersDataResponse usersDataResponse =
           (await RequestHandler.ProcessRequest<IFilteredUsersDataRequest, IFilteredUsersDataResponse>(
