@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LT.DigitalOffice.FilterService.Broker.Requests.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
@@ -61,7 +62,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
         }
       }
 
-      if (usersData is null)
+      if (usersData is null || !usersData.Any())
       {
         IFilteredUsersDataResponse usersDataResponse =
           (await RequestHandler.ProcessRequest<IFilteredUsersDataRequest, IFilteredUsersDataResponse>(
