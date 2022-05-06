@@ -48,7 +48,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
               value.SkipCount,
               value.TakeCount,
               filter.IsAscendingSort,
-              filter.FullNameIncludeSubstring.Length));
+              filter.FullNameIncludeSubstring ?? string.Empty));
       }
       else
       {
@@ -57,7 +57,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
               (Cache.Users, usersIds.GetRedisCacheHashCode(
                 value.SkipCount,
                 value.TakeCount,
-                filter.FullNameIncludeSubstring.Length));
+                filter.FullNameIncludeSubstring ?? string.Empty));
       }
 
       if (usersData is null)
