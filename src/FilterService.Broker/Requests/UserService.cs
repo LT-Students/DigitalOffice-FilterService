@@ -41,7 +41,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       List<UserData> usersData = null;
       int usersCount = 0;
 
-      if (filter.FullNameIncludeSubstring is null)
+      if (string.IsNullOrWhiteSpace(filter.FullNameIncludeSubstring))
       {
         if (filter.IsAscendingSort.HasValue)
         {
