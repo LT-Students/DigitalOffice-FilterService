@@ -92,7 +92,9 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       _userService = userService;
     }
 
-    public async Task<FindResultResponse<UserInfo>> ExecuteAsync(UserFilter filter, PaginationValues value)
+    public async Task<FindResultResponse<UserInfo>> ExecuteAsync(
+      UserFilter filter,
+      PaginationValues value)
     {
       FindResultResponse<UserInfo> response = new();
 

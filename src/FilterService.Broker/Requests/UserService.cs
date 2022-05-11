@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using LT.DigitalOffice.FilterService.Broker.Requests.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
@@ -37,20 +38,28 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       PaginationValues value,
       List<string> errors)
     {
-      List<UserData> usersData = new();
+      List<UserData> usersData = null;
       int usersCount = 0;
 
-      if (filter.IsAscendingSort.HasValue)
+      if (string.IsNullOrWhiteSpace(filter.FullNameIncludeSubstring))
       {
-        (usersData, usersCount) =
-          await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
-            (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount, filter.IsAscendingSort));
-      }
-      else
-      {
-        (usersData, usersCount) =
+        if (filter.IsAscendingSort.HasValue)
+        {
+          (usersData, usersCount) =
             await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
-              (Cache.Users, usersIds.GetRedisCacheHashCode(value.SkipCount, value.TakeCount));
+              (Cache.Users, usersIds.GetRedisCacheHashCode(
+                value.SkipCount,
+                value.TakeCount,
+                filter.IsAscendingSort));
+        }
+        else
+        {
+          (usersData, usersCount) =
+              await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
+                (Cache.Users, usersIds.GetRedisCacheHashCode(
+                  value.SkipCount,
+                  value.TakeCount));
+        }
       }
 
       if (usersData is null)
@@ -58,7 +67,12 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
         IFilteredUsersDataResponse usersDataResponse =
           (await RequestHandler.ProcessRequest<IFilteredUsersDataRequest, IFilteredUsersDataResponse>(
             _rcGetUsers,
-            IFilteredUsersDataRequest.CreateObj(usersIds, value.SkipCount, value.TakeCount),
+            IFilteredUsersDataRequest.CreateObj(
+              usersIds,
+              value.SkipCount,
+              value.TakeCount,
+              filter.IsAscendingSort,
+              filter.FullNameIncludeSubstring),
             errors,
             _logger));
 

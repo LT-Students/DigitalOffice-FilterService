@@ -20,5 +20,8 @@ namespace LT.DigitalOffice.FilterService.Models.Dto.Request.UserService
 
     [FromQuery(Name = "isAscendingSort")]
     public bool? IsAscendingSort { get; set; }
+
+    [FromQuery(Name = "fullNameIncludeSubstring")]
+    public string FullNameIncludeSubstring { get; set; }
   }
 }
