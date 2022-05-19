@@ -31,21 +31,21 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       _rcGetRoles = rcGetRoles;
     }
 
-    public async Task<List<RoleFilteredData>> GetRolesFilterDataAsync(List<Guid> roleIds, List<string> errors)
+    public async Task<List<RoleFilteredData>> GetRolesFilterDataAsync(List<Guid> rolesIds, List<string> errors)
     {
-      if (roleIds is null || !roleIds.Any())
+      if (rolesIds is null || !rolesIds.Any())
       {
         return null;
       }
 
-      List<RoleFilteredData> rolesData = await _globalCache.GetAsync<List<RoleFilteredData>>(Cache.Rights, roleIds.GetRedisCacheHashCode());
+      List<RoleFilteredData> rolesData = await _globalCache.GetAsync<List<RoleFilteredData>>(Cache.Rights, rolesIds.GetRedisCacheHashCode());
 
       if (rolesData is null)
       {
         rolesData =
           (await RequestHandler.ProcessRequest<IFilterRolesRequest, IFilterRolesResponse>(
             _rcGetRoles,
-            IFilterRolesRequest.CreateObj(roleIds),
+            IFilterRolesRequest.CreateObj(rolesIds),
             errors,
             _logger))
           ?.Roles;

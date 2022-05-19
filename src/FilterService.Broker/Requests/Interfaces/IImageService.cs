@@ -9,6 +9,6 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests.Interfaces
   [AutoInject]
   public interface IImageService
   {
-    Task<List<ImageData>> GetImagesDataAsync(List<Guid> usersImageIds, List<string> errors);
+    Task<List<ImageData>> GetImagesDataAsync(List<Guid> usersImagesIds, List<string> errors);
   }
 }

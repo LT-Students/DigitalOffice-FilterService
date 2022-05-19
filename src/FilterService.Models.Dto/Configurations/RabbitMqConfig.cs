@@ -4,6 +4,7 @@ using LT.DigitalOffice.Models.Broker.Requests.Department;
 using LT.DigitalOffice.Models.Broker.Requests.Image;
 using LT.DigitalOffice.Models.Broker.Requests.Office;
 using LT.DigitalOffice.Models.Broker.Requests.Position;
+using LT.DigitalOffice.Models.Broker.Requests.Project;
 using LT.DigitalOffice.Models.Broker.Requests.Rights;
 using LT.DigitalOffice.Models.Broker.Requests.User;
 
@@ -34,5 +35,8 @@ namespace LT.DigitalOffice.FilterService.Models.Dto.Configurations
 
     [AutoInjectRequest(typeof(IGetPositionsRequest))]
     public string GetPositionsEndpoint { get; set; }
+
+    [AutoInjectRequest(typeof(IGetProjectsRequest))]
+    public string GetProjectsEndpoint { get; set; }
   }
 }
