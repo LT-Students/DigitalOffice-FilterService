@@ -26,9 +26,9 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       _rcGetImages = rcGetImages;
     }
 
-    public async Task<List<ImageData>> GetImagesDataAsync(List<Guid> usersImageIds, List<string> errors)
+    public async Task<List<ImageData>> GetImagesDataAsync(List<Guid> usersImagesIds, List<string> errors)
     {
-      if (usersImageIds is null || !usersImageIds.Any())
+      if (usersImagesIds is null || !usersImagesIds.Any())
       {
         return null;
       }
@@ -36,7 +36,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       List<ImageData> imagesData =
         (await RequestHandler.ProcessRequest<IGetImagesRequest, IGetImagesResponse>(
           _rcGetImages,
-          IGetImagesRequest.CreateObj(usersImageIds, ImageSource.User),
+          IGetImagesRequest.CreateObj(usersImagesIds, ImageSource.User),
           errors,
           _logger))
         ?.ImagesData;

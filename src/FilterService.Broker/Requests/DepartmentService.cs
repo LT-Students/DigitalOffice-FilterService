@@ -34,7 +34,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       _rcGetDepartmentsData = rcGetDepartmentsData;
     }
 
-    public async Task<List<DepartmentFilteredData>> GetDepartmentFilterDataAsync(List<Guid> departmentsIds, List<string> errors)
+    public async Task<List<DepartmentFilteredData>> GetDepartmentFilteredDataAsync(List<Guid> departmentsIds, List<string> errors)
     {
       if (departmentsIds is null || !departmentsIds.Any())
       {

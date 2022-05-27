@@ -8,14 +8,14 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
 {
   public class RolesInfoMapper : IRolesInfoMapper
   {
-    public List<RolesInfo> Map(List<RoleFilteredData> rolesFilteredData)
+    public List<RoleInfo> Map(List<RoleFilteredData> rolesFilteredData)
     {
       if (rolesFilteredData is null)
       {
         return null;
       }
 
-      return rolesFilteredData.Select(x => new RolesInfo
+      return rolesFilteredData.Select(x => new RoleInfo
       {
         Id = x.Id,
         Name = x.Name

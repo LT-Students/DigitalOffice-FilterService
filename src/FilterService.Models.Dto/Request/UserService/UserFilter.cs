@@ -18,6 +18,9 @@ namespace LT.DigitalOffice.FilterService.Models.Dto.Request.UserService
     [FromQuery(Name = "officesIds")]
     public List<Guid> OfficesIds { get; set; }
 
+    [FromQuery(Name = "projectsIds")]
+    public List<Guid> ProjectsIds { get; set; }
+
     [FromQuery(Name = "isAscendingSort")]
     public bool? IsAscendingSort { get; set; }
 

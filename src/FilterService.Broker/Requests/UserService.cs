@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using LT.DigitalOffice.FilterService.Broker.Requests.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;

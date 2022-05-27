@@ -8,6 +8,6 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models.Interfaces
   [AutoInject]
   public interface IRolesInfoMapper
   {
-    List<RolesInfo> Map(List<RoleFilteredData> rolesFilteredData);
+    List<RoleInfo> Map(List<RoleFilteredData> rolesFilteredData);
   }
 }

@@ -13,6 +13,7 @@ using LT.DigitalOffice.Models.Broker.Models;
 using LT.DigitalOffice.Models.Broker.Models.Department;
 using LT.DigitalOffice.Models.Broker.Models.Office;
 using LT.DigitalOffice.Models.Broker.Models.Position;
+using LT.DigitalOffice.Models.Broker.Models.Project;
 using LT.DigitalOffice.Models.Broker.Models.Right;
 
 namespace LT.DigitalOffice.FilterService.Business.Commands.User
@@ -25,12 +26,14 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     private readonly IDepartmentInfoMapper _departmentInfoMapper;
     private readonly IOfficeInfoMapper _officeInfoMapper;
     private readonly IRolesInfoMapper _rolesInfoMapper;
+    private readonly IProjectInfoMapper _projectsInfoMapper;
     private readonly IOfficeService _officeService;
     private readonly IDepartmentService _departmentService;
     private readonly IImageService _imageService;
     private readonly IPositionService _positionService;
     private readonly IRoleService _roleService;
     private readonly IUserService _userService;
+    private readonly IProjectService _projectService;
 
     #region private methods
     private List<Guid> FilteredUserIds(params List<Guid>[] userIds)
@@ -71,12 +74,14 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     IDepartmentInfoMapper departmentInfoMapper,
     IOfficeInfoMapper officeInfoMapper,
     IRolesInfoMapper rolesInfoMapper,
+    IProjectInfoMapper projectsInfoMapper,
     IOfficeService officeService,
     IDepartmentService departmentService,
     IImageService imageService,
     IPositionService positionService,
     IRoleService roleService,
-    IUserService userService)
+    IUserService userService,
+    IProjectService projectService)
     {
       _rolesInfoMapper = rolesInfoMapper;
       _userInfoMapper = userInfoMapper;
@@ -84,12 +89,14 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
       _positionInfoMapper = positionInfoMapper;
       _departmentInfoMapper = departmentInfoMapper;
       _officeInfoMapper = officeInfoMapper;
+      _projectsInfoMapper = projectsInfoMapper;
       _officeService = officeService;
       _departmentService = departmentService;
       _imageService = imageService;
       _positionService = positionService;
       _roleService = roleService;
       _userService = userService;
+      _projectService = projectService;
     }
 
     public async Task<FindResultResponse<UserInfo>> ExecuteAsync(
@@ -100,23 +107,26 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
       List<UserInfo> userInfo = new();
 
-      Task<List<DepartmentFilteredData>> departmentsUsersTask = _departmentService.GetDepartmentFilterDataAsync(filter.DepartmentsIds, response.Errors);
-      Task<List<OfficeFilteredData>> officesUsersTask = _officeService.GetOfficeFilterDataAsync(filter.OfficesIds, response.Errors);
-      Task<List<PositionFilteredData>> positionsUsersTask = _positionService.GetPositionFilterDataAsync(filter.PositionsIds, response.Errors);
-      Task<List<RoleFilteredData>> rolesUsersTask = _roleService.GetRolesFilterDataAsync(filter.RolesIds, response.Errors);
+      Task<List<DepartmentFilteredData>> departmentsUsersTask = _departmentService.GetDepartmentFilteredDataAsync(filter.DepartmentsIds, response.Errors);
+      Task<List<OfficeFilteredData>> officesUsersTask = _officeService.GetOfficeFilteredDataAsync(filter.OfficesIds, response.Errors);
+      Task<List<PositionFilteredData>> positionsUsersTask = _positionService.GetPositionFilteredDataAsync(filter.PositionsIds, response.Errors);
+      Task<List<RoleFilteredData>> rolesUsersTask = _roleService.GetRolesFilteredDataAsync(filter.RolesIds, response.Errors);
+      Task<List<ProjectData>> projectsUsersTask = _projectService.GetProjectsDataAsync(filter.ProjectsIds, response.Errors);
 
-      await Task.WhenAll(departmentsUsersTask, officesUsersTask, positionsUsersTask, rolesUsersTask);
+      await Task.WhenAll(departmentsUsersTask, officesUsersTask, positionsUsersTask, rolesUsersTask, projectsUsersTask);
 
       List<OfficeFilteredData> officeFilteredData = await officesUsersTask;
       List<DepartmentFilteredData> departmentsFilteredUsers = await departmentsUsersTask;
       List<PositionFilteredData> positionsFilteredData = await positionsUsersTask;
       List<RoleFilteredData> rolesFilteredData = await rolesUsersTask;
+      List<ProjectData> projectsData = await projectsUsersTask;
 
       List<Guid> filteredUsers = FilteredUserIds(
         officeFilteredData?.SelectMany(x => x.UsersIds).ToList(),
         departmentsFilteredUsers?.SelectMany(x => x.UsersIds).ToList(),
         positionsFilteredData?.SelectMany(x => x.UsersIds).ToList(),
-        rolesFilteredData?.SelectMany(x => x.UsersIds).ToList());
+        rolesFilteredData?.SelectMany(x => x.UsersIds).ToList(),
+        projectsData?.SelectMany(x => x.Users).Select(x => x.UserId).ToList());
 
       if (filteredUsers is not null)
       {
@@ -164,7 +174,9 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
           departmentsFilteredUsers,
           departmentInfo,
           rolesFilteredData,
-          officeFilteredData);
+          officeFilteredData,
+          _projectsInfoMapper.Map(projectsData),
+          projectsData);
 
         List<ImageData> usersImages = await _imageService.GetImagesDataAsync(
            usersData.Where(u => u.ImageId.HasValue).

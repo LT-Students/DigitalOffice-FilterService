@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LT.DigitalOffice.FilterService.Models.Dto.Models
 {
@@ -11,8 +12,9 @@ namespace LT.DigitalOffice.FilterService.Models.Dto.Models
     public string Status { get; set; }
     public ImageInfo Avatar { get; set; }
     public PositionInfo Position { get; set; }
-    public RolesInfo Role { get; set; }
+    public RoleInfo Role { get; set; }
     public OfficeInfo Office { get; set; }
     public DepartmentInfo Department { get; set; }
+    public List<ProjectInfo> Projects { get; set; }
   }
 }

@@ -9,6 +9,6 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests.Interfaces
   [AutoInject]
   public interface IRoleService
   {
-    Task<List<RoleFilteredData>> GetRolesFilterDataAsync(List<Guid> roleIds, List<string> errors);
+    Task<List<RoleFilteredData>> GetRolesFilteredDataAsync(List<Guid> rolesIds, List<string> errors);
   }
 }

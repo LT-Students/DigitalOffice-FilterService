@@ -34,7 +34,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       _rcGetPositionsData = rcGetPositionsData;
     }
 
-    public async Task<List<PositionFilteredData>> GetPositionFilterDataAsync(List<Guid> positionsIds, List<string> errors)
+    public async Task<List<PositionFilteredData>> GetPositionFilteredDataAsync(List<Guid> positionsIds, List<string> errors)
     {
       if (positionsIds is null || !positionsIds.Any())
       {
