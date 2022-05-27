@@ -31,7 +31,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       _rcGetOffices = rcGetOffices;
     }
 
-    public async Task<List<OfficeFilteredData>> GetOfficeFilterDataAsync(List<Guid> officesIds, List<string> errors)
+    public async Task<List<OfficeFilteredData>> GetOfficeFiltedDataAsync(List<Guid> officesIds, List<string> errors)
     {
       if (officesIds is null || !officesIds.Any())
       {

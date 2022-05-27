@@ -107,10 +107,10 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
       List<UserInfo> userInfo = new();
 
-      Task<List<DepartmentFilteredData>> departmentsUsersTask = _departmentService.GetDepartmentFilterDataAsync(filter.DepartmentsIds, response.Errors);
-      Task<List<OfficeFilteredData>> officesUsersTask = _officeService.GetOfficeFilterDataAsync(filter.OfficesIds, response.Errors);
+      Task<List<DepartmentFilteredData>> departmentsUsersTask = _departmentService.GetDepartmentFiltedDataAsync(filter.DepartmentsIds, response.Errors);
+      Task<List<OfficeFilteredData>> officesUsersTask = _officeService.GetOfficeFiltedDataAsync(filter.OfficesIds, response.Errors);
       Task<List<PositionFilteredData>> positionsUsersTask = _positionService.GetPositionFilterDataAsync(filter.PositionsIds, response.Errors);
-      Task<List<RoleFilteredData>> rolesUsersTask = _roleService.GetRolesFilterDataAsync(filter.RolesIds, response.Errors);
+      Task<List<RoleFilteredData>> rolesUsersTask = _roleService.GetRolesFilteredDataAsync(filter.RolesIds, response.Errors);
       Task<List<ProjectData>> projectsUsersTask = _projectService.GetProjectsDataAsync(filter.ProjectsIds, response.Errors);
 
       await Task.WhenAll(departmentsUsersTask, officesUsersTask, positionsUsersTask, rolesUsersTask, projectsUsersTask);

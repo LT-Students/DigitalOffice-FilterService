@@ -31,7 +31,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       _rcGetRoles = rcGetRoles;
     }
 
-    public async Task<List<RoleFilteredData>> GetRolesFilterDataAsync(List<Guid> rolesIds, List<string> errors)
+    public async Task<List<RoleFilteredData>> GetRolesFilteredDataAsync(List<Guid> rolesIds, List<string> errors)
     {
       if (rolesIds is null || !rolesIds.Any())
       {
