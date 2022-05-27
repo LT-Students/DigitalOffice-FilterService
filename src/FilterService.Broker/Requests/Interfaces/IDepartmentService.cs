@@ -9,7 +9,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests.Interfaces
   [AutoInject]
   public interface IDepartmentService
   {
-    Task<List<DepartmentFilteredData>> GetDepartmentFiltedDataAsync(List<Guid> departmentsIds, List<string> errors);
+    Task<List<DepartmentFilteredData>> GetDepartmentFilteredDataAsync(List<Guid> departmentsIds, List<string> errors);
 
     Task<List<DepartmentData>> GetDepartmentsDataAsync(List<Guid> usersIds, List<string> errors);
   }

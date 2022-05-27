@@ -9,6 +9,6 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests.Interfaces
   [AutoInject]
   public interface IOfficeService
   {
-    Task<List<OfficeFilteredData>> GetOfficeFiltedDataAsync(List<Guid> officesIds, List<string> errors);
+    Task<List<OfficeFilteredData>> GetOfficeFilteredDataAsync(List<Guid> officesIds, List<string> errors);
   }
 }

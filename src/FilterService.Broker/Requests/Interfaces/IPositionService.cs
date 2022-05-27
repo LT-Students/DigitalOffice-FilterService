@@ -9,7 +9,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests.Interfaces
   [AutoInject]
   public interface IPositionService
   {
-    Task<List<PositionFilteredData>> GetPositionFilterDataAsync(List<Guid> positionsIds, List<string> errors);
+    Task<List<PositionFilteredData>> GetPositionFilteredDataAsync(List<Guid> positionsIds, List<string> errors);
 
     Task<List<PositionData>> GetPositionsDataAsync(List<Guid> usersIds, List<string> errors);
   }
