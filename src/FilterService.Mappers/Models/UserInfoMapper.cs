@@ -43,7 +43,7 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
         Position = positionInfo?.FirstOrDefault(pi => pi.Id == positionFilteredData?.FirstOrDefault(pfd => pfd.UsersIds.Contains(x.Id))?.Id) ??
           positionInfo?.FirstOrDefault(pi => pi.Id == positionData?.FirstOrDefault(pd => pd.Users.FirstOrDefault(u => u.UserId == x.Id)?.UserId == x.Id)?.Id),
         Department = departmentInfo?.FirstOrDefault(di => di.Id == departmentFilteredData?.FirstOrDefault(dfd => dfd.UsersIds.Contains(x.Id))?.Id) ??
-          departmentInfo?.FirstOrDefault(di => di.Id == departmentData?.FirstOrDefault(dd => dd.UsersIds.Contains(x.Id))?.Id),
+          departmentInfo?.FirstOrDefault(di => di.Id == departmentData?.FirstOrDefault(dd => dd.Users.Select(user => user.UserId).Contains(x.Id))?.Id),
         Office = officeInfo?.FirstOrDefault(oi => oi.Id == officeFilteredData?.FirstOrDefault(ofd => ofd.UsersIds.Contains(x.Id))?.Id),
         Role = rolesInfo?.FirstOrDefault(ri => ri.Id == rolesFilteredData?.FirstOrDefault(rfd => rfd.UsersIds.Contains(x.Id))?.Id),
         Projects = projectsInfo?.Where(project => (bool)(projectsData?.Where(projectData => projectData.Users.FirstOrDefault(user => user.UserId == x.Id) is not null)
