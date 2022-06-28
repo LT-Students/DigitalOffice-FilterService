@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LT.DigitalOffice.FilterService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Models;
@@ -21,7 +20,7 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
         Id = x.Id,
         Name = x.Name,
         Status = x.Status,
-        ShortName = x.ShortName,  
+        ShortName = x.ShortName,
         ShortDescription = x.ShortDescription
       }).ToList();
     }

@@ -39,7 +39,6 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
         FirstName = x.FirstName,
         LastName = x.LastName,
         MiddleName = x?.MiddleName,
-        Status = x.Status,
         Position = positionInfo?.FirstOrDefault(pi => pi.Id == positionFilteredData?.FirstOrDefault(pfd => pfd.UsersIds.Contains(x.Id))?.Id) ??
           positionInfo?.FirstOrDefault(pi => pi.Id == positionData?.FirstOrDefault(pd => pd.UsersIds.Contains(x.Id))?.Id),
         Department = departmentInfo?.FirstOrDefault(di => di.Id == departmentFilteredData?.FirstOrDefault(dfd => dfd.UsersIds.Contains(x.Id))?.Id) ??
