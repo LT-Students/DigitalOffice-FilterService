@@ -75,7 +75,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
         departmentsData =
           (await RequestHandler.ProcessRequest<IGetDepartmentsRequest, IGetDepartmentsResponse>(
             _rcGetDepartmentsData,
-            IGetDepartmentsRequest.CreateObj(usersIds),
+            IGetDepartmentsRequest.CreateObj(usersIds: usersIds),
             errors,
             _logger))
           ?.Departments;
