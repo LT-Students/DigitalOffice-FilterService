@@ -53,6 +53,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
             _logger))
           ?.Departments;
       }
+
       if (departmentsData is null)
       {
         errors.Add("Can not filter by departments.");
@@ -75,7 +76,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
         departmentsData =
           (await RequestHandler.ProcessRequest<IGetDepartmentsRequest, IGetDepartmentsResponse>(
             _rcGetDepartmentsData,
-            IGetDepartmentsRequest.CreateObj(usersIds),
+            IGetDepartmentsRequest.CreateObj(usersIds: usersIds),
             errors,
             _logger))
           ?.Departments;
