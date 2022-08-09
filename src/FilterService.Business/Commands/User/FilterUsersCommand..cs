@@ -190,10 +190,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
       response.Body = userInfo;
 
-      response.Status = response.Errors.Any()
-        ? OperationResultStatusType.PartialSuccess
-        : OperationResultStatusType.FullSuccess;
-
       return response;
     }
   }
