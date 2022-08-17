@@ -21,6 +21,30 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
     private readonly IGlobalCacheRepository _globalCache;
     private readonly IRequestClient<IFilteredUsersDataRequest> _rcGetUsers;
 
+    private string CreateRedisKey(
+      List<Guid> usersIds,
+      int skipCount,
+      int takeCount,
+      bool? ascendingSort,
+      string fullNameIncludeSubstring)
+    {
+      List<object> additionalArgs = new() { skipCount, takeCount };
+
+      if (ascendingSort.HasValue)
+      {
+        additionalArgs.Add(ascendingSort.Value);
+      }
+
+      if (!string.IsNullOrEmpty(fullNameIncludeSubstring))
+      {
+        additionalArgs.Add(fullNameIncludeSubstring);
+      }
+
+      var key = usersIds.GetRedisCacheHashCode(additionalArgs.ToArray());
+
+      return key;
+    }
+
     public UserService(
       ILogger<UserService> logger,
       IGlobalCacheRepository globalCache,
@@ -34,32 +58,15 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
     public async Task<(List<UserData> usersData, int usersCount)> GetFilteredUsersDataAsync(
       List<Guid> usersIds,
       UserFilter filter,
-      PaginationValues value,
+      PaginationValues values,
       List<string> errors)
     {
-      List<UserData> usersData = null;
+      List<UserData> usersData;
       int usersCount = 0;
 
-      if (string.IsNullOrWhiteSpace(filter.FullNameIncludeSubstring))
-      {
-        if (filter.IsAscendingSort.HasValue)
-        {
-          (usersData, usersCount) =
-            await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
-              (Cache.Users, usersIds.GetRedisCacheHashCode(
-                value.SkipCount,
-                value.TakeCount,
-                filter.IsAscendingSort));
-        }
-        else
-        {
-          (usersData, usersCount) =
-              await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>
-                (Cache.Users, usersIds.GetRedisCacheHashCode(
-                  value.SkipCount,
-                  value.TakeCount));
-        }
-      }
+      (usersData, usersCount) = await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>(
+        Cache.Users,
+        CreateRedisKey(usersIds, values.SkipCount, values.TakeCount, filter.IsAscendingSort, filter.FullNameIncludeSubstring));
 
       if (usersData is null)
       {
@@ -67,11 +74,11 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
           (await RequestHandler.ProcessRequest<IFilteredUsersDataRequest, IFilteredUsersDataResponse>(
             _rcGetUsers,
             IFilteredUsersDataRequest.CreateObj(
-              usersIds,
-              value.SkipCount,
-              value.TakeCount,
-              filter.IsAscendingSort,
-              filter.FullNameIncludeSubstring),
+              usersIds: usersIds,
+              skipCount: values.SkipCount,
+              takeCount: values.TakeCount,
+              ascendingSort: filter.IsAscendingSort,
+              fullNameIncludeSubstring: filter.FullNameIncludeSubstring),
             errors,
             _logger));
 
