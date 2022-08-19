@@ -40,9 +40,7 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
         additionalArgs.Add(fullNameIncludeSubstring);
       }
 
-      var key = usersIds.GetRedisCacheHashCode(additionalArgs.ToArray());
-
-      return key;
+      return usersIds.GetRedisCacheHashCode(additionalArgs.ToArray());
     }
 
     public UserService(
