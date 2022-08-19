@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="$(ProjectDir)..\..\Common.Configurations.targets" />
+
+    <ItemGroup>
+      <ProjectReference Include="..\FilterService.Models.Dto\FilterService.Models.Dto.csproj" />
+    </ItemGroup>
+
+</Project>
