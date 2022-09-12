@@ -21,28 +21,6 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
     private readonly IGlobalCacheRepository _globalCache;
     private readonly IRequestClient<IFilteredUsersDataRequest> _rcGetUsers;
 
-    private string CreateRedisKey(
-      List<Guid> usersIds,
-      int skipCount,
-      int takeCount,
-      bool? ascendingSort,
-      string fullNameIncludeSubstring)
-    {
-      List<object> additionalArgs = new() { skipCount, takeCount };
-
-      if (ascendingSort.HasValue)
-      {
-        additionalArgs.Add(ascendingSort.Value);
-      }
-
-      if (!string.IsNullOrEmpty(fullNameIncludeSubstring))
-      {
-        additionalArgs.Add(fullNameIncludeSubstring);
-      }
-
-      return usersIds.GetRedisCacheHashCode(additionalArgs.ToArray());
-    }
-
     public UserService(
       ILogger<UserService> logger,
       IGlobalCacheRepository globalCache,
@@ -62,26 +40,27 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       List<UserData> usersData;
       int usersCount = 0;
 
-      (usersData, usersCount) = await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>(
-        Cache.Users,
-        CreateRedisKey(usersIds, values.SkipCount, values.TakeCount, filter.IsAscendingSort, filter.FullNameIncludeSubstring));
+      object request = IFilteredUsersDataRequest.CreateObj(
+        usersIds: usersIds,
+        skipCount: values.SkipCount,
+        takeCount: values.TakeCount,
+        ascendingSort: filter.IsAscendingSort,
+        fullNameIncludeSubstring: filter.FullNameIncludeSubstring);
+
+      (usersData, usersCount) =
+        await _globalCache.GetAsync<(List<UserData> usersData, int usersCount)>(Cache.Users, usersIds.GetRedisCacheKey(request.GetBasicProperties()));
 
       if (usersData is null)
       {
         IFilteredUsersDataResponse usersDataResponse =
           (await RequestHandler.ProcessRequest<IFilteredUsersDataRequest, IFilteredUsersDataResponse>(
             _rcGetUsers,
-            IFilteredUsersDataRequest.CreateObj(
-              usersIds: usersIds,
-              skipCount: values.SkipCount,
-              takeCount: values.TakeCount,
-              ascendingSort: filter.IsAscendingSort,
-              fullNameIncludeSubstring: filter.FullNameIncludeSubstring),
+            request,
             errors,
             _logger));
 
-        usersData = usersDataResponse is not null ? usersDataResponse.UsersData : usersData;
-        usersCount = usersDataResponse is not null ? usersDataResponse.TotalCount : usersCount;
+        usersData = usersDataResponse?.UsersData ?? usersData;
+        usersCount = usersDataResponse?.TotalCount ?? usersCount;
       }
 
       return (usersData, usersCount);
