@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DigitalOffice.Kernel.RedisSupport.Extensions;
 using HealthChecks.UI.Client;
 using LT.DigitalOffice.FilterService.Models.Dto.Configurations;
 using LT.DigitalOffice.Kernel.BrokerSupport.Configurations;
@@ -27,7 +28,6 @@ namespace LT.DigitalOffice.FilterService
   public class Startup : BaseApiInfo
   {
     public const string CorsPolicyName = "LtDoCorsPolicy";
-    private string redisConnStr;
 
     private readonly BaseServiceInfoConfig _serviceInfoConfig;
     private readonly RabbitMqConfig _rabbitMqConfig;
@@ -96,7 +96,7 @@ namespace LT.DigitalOffice.FilterService
       services.AddHttpContextAccessor();
 
       services.AddHealthChecks()
-            .AddRabbitMqCheck();
+        .AddRabbitMqCheck();
 
       services.Configure<TokenConfiguration>(Configuration.GetSection("CheckTokenMiddleware"));
       services.Configure<BaseServiceInfoConfig>(Configuration.GetSection(BaseServiceInfoConfig.SectionName));
@@ -123,20 +123,7 @@ namespace LT.DigitalOffice.FilterService
         services.Configure<RedisConfig>(Configuration.GetSection(RedisConfig.SectionName));
       }
 
-      redisConnStr = Environment.GetEnvironmentVariable("RedisConnectionString");
-      if (string.IsNullOrEmpty(redisConnStr))
-      {
-        redisConnStr = Configuration.GetConnectionString("Redis");
-
-        Log.Information($"Redis connection string from appsettings.json was used. Value '{PasswordHider.Hide(redisConnStr)}'");
-      }
-      else
-      {
-        Log.Information($"Redis connection string from environment was used. Value '{PasswordHider.Hide(redisConnStr)}'");
-      }
-
-      services.AddSingleton<IConnectionMultiplexer>(
-        x => ConnectionMultiplexer.Connect(redisConnStr + ",abortConnect=false,connectRetry=1,connectTimeout=2000"));
+      services.AddRedisSingleton(Configuration);
 
       ConfigureMassTransit(services);
     }
@@ -156,20 +143,20 @@ namespace LT.DigitalOffice.FilterService
       app.UseCors(CorsPolicyName);
 
       app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapControllers().RequireCors(CorsPolicyName);
+        endpoints.MapHealthChecks($"/{_serviceInfoConfig.Id}/hc", new HealthCheckOptions
         {
-          endpoints.MapControllers().RequireCors(CorsPolicyName);
-          endpoints.MapHealthChecks($"/{_serviceInfoConfig.Id}/hc", new HealthCheckOptions
+          ResultStatusCodes = new Dictionary<HealthStatus, int>
           {
-            ResultStatusCodes = new Dictionary<HealthStatus, int>
-            {
-            { HealthStatus.Unhealthy, 200 },
-            { HealthStatus.Healthy, 200 },
-            { HealthStatus.Degraded, 200 },
-            },
-            Predicate = check => check.Name != "masstransit-bus",
-            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-          });
+          { HealthStatus.Unhealthy, 200 },
+          { HealthStatus.Healthy, 200 },
+          { HealthStatus.Degraded, 200 },
+          },
+          Predicate = check => check.Name != "masstransit-bus",
+          ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
+      });
     }
   }
 }

@@ -43,14 +43,17 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
         return null;
       }
 
-      List<ProjectData> projectsData = await _globalCache.GetAsync<List<ProjectData>>(Cache.Projects, usersProjectsIds.GetRedisCacheHashCode(false, false));
+      object request = IGetProjectsRequest.CreateObj(projectsIds: usersProjectsIds, includeUsers: true);
+
+      List<ProjectData> projectsData =
+        await _globalCache.GetAsync<List<ProjectData>>(Cache.Projects, usersProjectsIds.GetRedisCacheKey(request.GetBasicProperties()));
 
       if (projectsData is null)
       {
         projectsData =
           (await RequestHandler.ProcessRequest<IGetProjectsRequest, IGetProjectsResponse>(
             _rcGetProjects,
-            IGetProjectsRequest.CreateObj(projectsIds: usersProjectsIds,  includeUsers : true),
+            request,
             errors,
             _logger))
           ?.Projects;
