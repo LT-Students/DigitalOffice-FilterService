@@ -41,7 +41,8 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       object request = IFilterOfficesRequest.CreateObj(officesIds);
 
       List<OfficeFilteredData> officesData =
-        await _globalCache.GetAsync<List<OfficeFilteredData>>(Cache.Offices, officesIds.GetRedisCacheKey(request.GetBasicProperties()));
+        await _globalCache.GetAsync<List<OfficeFilteredData>>(Cache.Offices, officesIds.GetRedisCacheKey(
+          nameof(IFilterOfficesRequest), request.GetBasicProperties()));
 
       if (officesData is null)
       {

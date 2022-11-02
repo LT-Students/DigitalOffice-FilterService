@@ -44,7 +44,8 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       object request = IFilterDepartmentsRequest.CreateObj(departmentsIds);
 
       List<DepartmentFilteredData> departmentsData =
-        await _globalCache.GetAsync<List<DepartmentFilteredData>>(Cache.Departments, departmentsIds.GetRedisCacheKey(request.GetBasicProperties()));
+        await _globalCache.GetAsync<List<DepartmentFilteredData>>(Cache.Departments, departmentsIds.GetRedisCacheKey(
+          nameof(IFilterDepartmentsRequest), request.GetBasicProperties()));
 
       if (departmentsData is null)
       {
@@ -75,7 +76,8 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       object request = IGetDepartmentsRequest.CreateObj(usersIds: usersIds);
 
       List<DepartmentData> departmentsData =
-        await _globalCache.GetAsync<List<DepartmentData>>(Cache.Departments, usersIds.GetRedisCacheKey(request.GetBasicProperties()));
+        await _globalCache.GetAsync<List<DepartmentData>>(Cache.Departments, usersIds.GetRedisCacheKey(
+          nameof(IGetDepartmentsRequest), request.GetBasicProperties()));
 
       if (departmentsData is null)
       {
