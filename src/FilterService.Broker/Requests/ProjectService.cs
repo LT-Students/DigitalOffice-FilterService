@@ -46,7 +46,8 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
       object request = IGetProjectsRequest.CreateObj(projectsIds: usersProjectsIds, includeUsers: true);
 
       List<ProjectData> projectsData =
-        await _globalCache.GetAsync<List<ProjectData>>(Cache.Projects, usersProjectsIds.GetRedisCacheKey(request.GetBasicProperties()));
+        await _globalCache.GetAsync<List<ProjectData>>(Cache.Projects, usersProjectsIds.GetRedisCacheKey(
+          nameof(IGetProjectsRequest), request.GetBasicProperties()));
 
       if (projectsData is null)
       {

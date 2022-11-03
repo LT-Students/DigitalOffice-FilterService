@@ -40,7 +40,8 @@ namespace LT.DigitalOffice.FilterService.Broker.Requests
 
       object request = IFilterRolesRequest.CreateObj(rolesIds);
 
-      List<RoleFilteredData> rolesData = await _globalCache.GetAsync<List<RoleFilteredData>>(Cache.Rights, rolesIds.GetRedisCacheKey(request.GetBasicProperties()));
+      List<RoleFilteredData> rolesData = await _globalCache.GetAsync<List<RoleFilteredData>>(Cache.Rights, rolesIds.GetRedisCacheKey(
+        nameof(IFilterRolesRequest), request.GetBasicProperties()));
 
       if (rolesData is null)
       {
