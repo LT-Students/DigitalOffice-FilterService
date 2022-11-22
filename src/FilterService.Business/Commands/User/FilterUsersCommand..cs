@@ -7,11 +7,9 @@ using LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces;
 using LT.DigitalOffice.FilterService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Models;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Models;
 using LT.DigitalOffice.Models.Broker.Models.Department;
-using LT.DigitalOffice.Models.Broker.Models.Image;
 using LT.DigitalOffice.Models.Broker.Models.Office;
 using LT.DigitalOffice.Models.Broker.Models.Position;
 using LT.DigitalOffice.Models.Broker.Models.Project;
@@ -177,8 +175,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
           _projectsInfoMapper.Map(projectsData),
           projectsData);
 
-
-        userInfo = _userInfoMapper.Map(userInfo, usersData, _imageInfoMapper.Map(usersImages));
         response.TotalCount = totalCount.Value;
       }
 

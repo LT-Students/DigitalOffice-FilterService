@@ -28,43 +28,22 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
       List<ProjectInfo> projectsInfo,
       List<ProjectData> projectsData)
     {
-      if (usersData is null)
-      {
-        return null;
-      }
-
-      return usersData.Select(x => new UserInfo
+      return usersData?.Select(x => new UserInfo
       {
         Id = x.Id,
+        AvatarId = x.ImageId,
         FirstName = x.FirstName,
         LastName = x.LastName,
         MiddleName = x?.MiddleName,
         Position = positionInfo?.FirstOrDefault(pi => pi.Id == positionFilteredData?.FirstOrDefault(pfd => pfd.UsersIds.Contains(x.Id))?.Id) ??
-          positionInfo?.FirstOrDefault(pi => pi.Id == positionData?.FirstOrDefault(pd => pd.UsersIds.Contains(x.Id))?.Id),
+                   positionInfo?.FirstOrDefault(pi => pi.Id == positionData?.FirstOrDefault(pd => pd.UsersIds.Contains(x.Id))?.Id),
         Department = departmentInfo?.FirstOrDefault(di => di.Id == departmentFilteredData?.FirstOrDefault(dfd => dfd.UsersIds.Contains(x.Id))?.Id) ??
-          departmentInfo?.FirstOrDefault(di => di.Id == departmentData?.FirstOrDefault(dd => dd.Users.Select(user => user.UserId).Contains(x.Id))?.Id),
+                     departmentInfo?.FirstOrDefault(di => di.Id == departmentData?.FirstOrDefault(dd => dd.Users.Select(user => user.UserId).Contains(x.Id))?.Id),
         Office = officeInfo?.FirstOrDefault(oi => oi.Id == officeFilteredData?.FirstOrDefault(ofd => ofd.UsersIds.Contains(x.Id))?.Id),
         Role = rolesInfo?.FirstOrDefault(ri => ri.Id == rolesFilteredData?.FirstOrDefault(rfd => rfd.UsersIds.Contains(x.Id))?.Id),
         Projects = projectsInfo?.Where(project => (bool)(projectsData?.Where(projectData => projectData.Users.FirstOrDefault(user => user.UserId == x.Id) is not null)
           .Select(result => result.Id).Contains(project.Id))).ToList()
       }).ToList();
-    }
-
-    public List<UserInfo> Map(
-      List<UserInfo> usersInfos,
-      List<UserData> usersData,
-      List<ImageInfo> imagesInfos)
-    {
-      if (!usersInfos.Any() || usersInfos is null)
-      {
-        return new();
-      }
-
-      usersInfos.ForEach(
-        ui => ui.Avatar = imagesInfos?.FirstOrDefault(
-          i => i.Id == usersData.FirstOrDefault(ud => ud.Id == ui.Id).ImageId));
-
-      return usersInfos;
     }
   }
 }
