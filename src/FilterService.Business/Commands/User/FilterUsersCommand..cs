@@ -20,7 +20,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
   public class FilterUsersCommand : IFilterUsersCommand
   {
     private readonly IUserInfoMapper _userInfoMapper;
-    private readonly IImageInfoMapper _imageInfoMapper;
     private readonly IPositionInfoMapper _positionInfoMapper;
     private readonly IDepartmentInfoMapper _departmentInfoMapper;
     private readonly IOfficeInfoMapper _officeInfoMapper;
@@ -28,7 +27,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     private readonly IProjectInfoMapper _projectsInfoMapper;
     private readonly IOfficeService _officeService;
     private readonly IDepartmentService _departmentService;
-    private readonly IImageService _imageService;
     private readonly IPositionService _positionService;
     private readonly IRoleService _roleService;
     private readonly IUserService _userService;
@@ -68,7 +66,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
     public FilterUsersCommand(
     IUserInfoMapper userInfoMapper,
-    IImageInfoMapper imageInfoMapper,
     IPositionInfoMapper positionInfoMapper,
     IDepartmentInfoMapper departmentInfoMapper,
     IOfficeInfoMapper officeInfoMapper,
@@ -76,7 +73,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     IProjectInfoMapper projectsInfoMapper,
     IOfficeService officeService,
     IDepartmentService departmentService,
-    IImageService imageService,
     IPositionService positionService,
     IRoleService roleService,
     IUserService userService,
@@ -84,14 +80,12 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     {
       _rolesInfoMapper = rolesInfoMapper;
       _userInfoMapper = userInfoMapper;
-      _imageInfoMapper = imageInfoMapper;
       _positionInfoMapper = positionInfoMapper;
       _departmentInfoMapper = departmentInfoMapper;
       _officeInfoMapper = officeInfoMapper;
       _projectsInfoMapper = projectsInfoMapper;
       _officeService = officeService;
       _departmentService = departmentService;
-      _imageService = imageService;
       _positionService = positionService;
       _roleService = roleService;
       _userService = userService;
