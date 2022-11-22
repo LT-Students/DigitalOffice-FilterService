@@ -9,7 +9,6 @@ using LT.DigitalOffice.Kernel.BrokerSupport.Helpers;
 using LT.DigitalOffice.Kernel.BrokerSupport.Middlewares.Token;
 using LT.DigitalOffice.Kernel.Configurations;
 using LT.DigitalOffice.Kernel.Extensions;
-using LT.DigitalOffice.Kernel.Helpers;
 using LT.DigitalOffice.Kernel.Middlewares.ApiInformation;
 using LT.DigitalOffice.Kernel.RedisSupport.Configurations;
 using MassTransit;
@@ -20,8 +19,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using Serilog;
-using StackExchange.Redis;
 
 namespace LT.DigitalOffice.FilterService
 {
@@ -73,7 +70,7 @@ namespace LT.DigitalOffice.FilterService
         .Get<RabbitMqConfig>();
 
       Version = "1.0.0.0";
-      Description = "FilterService is an API that intended to find userss update user's their parameters.";
+      Description = "FilterService is an API that intended to find users update user's their parameters.";
       StartTime = DateTime.UtcNow;
       ApiName = $"LT Digital Office - {_serviceInfoConfig.Name}";
     }
