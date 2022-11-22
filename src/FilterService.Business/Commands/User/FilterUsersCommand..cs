@@ -177,10 +177,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
           _projectsInfoMapper.Map(projectsData),
           projectsData);
 
-        List<ImageData> usersImages = await _imageService.GetImagesDataAsync(
-           usersData.Where(u => u.ImageId.HasValue).
-           Select(u => u.ImageId.Value).ToList(),
-           response.Errors);
 
         userInfo = _userInfoMapper.Map(userInfo, usersData, _imageInfoMapper.Map(usersImages));
         response.TotalCount = totalCount.Value;
