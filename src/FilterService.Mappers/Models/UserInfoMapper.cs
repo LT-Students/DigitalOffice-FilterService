@@ -31,12 +31,12 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models
       return usersData?.Select(x => new UserInfo
       {
         Id = x.Id,
-        AvatarId = x.ImageId,
         FirstName = x.FirstName,
         LastName = x.LastName,
-        MiddleName = x?.MiddleName,
+        MiddleName = x.MiddleName,
+        AvatarId = x.ImageId,
         Position = positionInfo?.FirstOrDefault(pi => pi.Id == positionFilteredData?.FirstOrDefault(pfd => pfd.UsersIds.Contains(x.Id))?.Id) ??
-          positionInfo?.FirstOrDefault(pi => pi.Id == positionData?.FirstOrDefault(pd => pd.UsersIds.Contains(x.Id))?.Id),
+                   positionInfo?.FirstOrDefault(pi => pi.Id == positionData?.FirstOrDefault(pd => pd.UsersIds.Contains(x.Id))?.Id),
         Department = departmentInfo?.FirstOrDefault(di => di.Id == departmentFilteredData?.FirstOrDefault(dfd => dfd.UsersIds.Contains(x.Id))?.Id) ??
           departmentInfo?.FirstOrDefault(di => di.Id == departmentData?.FirstOrDefault(dd => dd.Users.Select(user => user.UserId).Contains(x.Id))?.Id),
         Office = officeInfo?.FirstOrDefault(oi => oi.Id == officeFilteredData?.FirstOrDefault(ofd => ofd.UsersIds.Contains(x.Id))?.Id),
