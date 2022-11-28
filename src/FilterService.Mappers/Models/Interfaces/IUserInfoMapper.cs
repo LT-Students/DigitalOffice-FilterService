@@ -27,10 +27,5 @@ namespace LT.DigitalOffice.FilterService.Mappers.Models.Interfaces
       List<OfficeFilteredData> officeFilteredData,
       List<ProjectInfo> projectsInfo,
       List<ProjectData> projectsData);
-
-    List<UserInfo> Map(
-      List<UserInfo> usersInfos,
-      List<UserData> usersData,
-      List<ImageInfo> imagesInfo);
   }
 }

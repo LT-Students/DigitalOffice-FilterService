@@ -9,7 +9,7 @@ namespace LT.DigitalOffice.FilterService.Models.Dto.Models
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string MiddleName { get; set; }
-    public ImageInfo Avatar { get; set; }
+    public Guid? AvatarId { get; set; }
     public PositionInfo Position { get; set; }
     public RoleInfo Role { get; set; }
     public OfficeInfo Office { get; set; }

@@ -7,11 +7,9 @@ using LT.DigitalOffice.FilterService.Business.Commands.User.Interfaces;
 using LT.DigitalOffice.FilterService.Mappers.Models.Interfaces;
 using LT.DigitalOffice.FilterService.Models.Dto.Models;
 using LT.DigitalOffice.FilterService.Models.Dto.Request.UserService;
-using LT.DigitalOffice.Kernel.Enums;
 using LT.DigitalOffice.Kernel.Responses;
 using LT.DigitalOffice.Models.Broker.Models;
 using LT.DigitalOffice.Models.Broker.Models.Department;
-using LT.DigitalOffice.Models.Broker.Models.Image;
 using LT.DigitalOffice.Models.Broker.Models.Office;
 using LT.DigitalOffice.Models.Broker.Models.Position;
 using LT.DigitalOffice.Models.Broker.Models.Project;
@@ -22,7 +20,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
   public class FilterUsersCommand : IFilterUsersCommand
   {
     private readonly IUserInfoMapper _userInfoMapper;
-    private readonly IImageInfoMapper _imageInfoMapper;
     private readonly IPositionInfoMapper _positionInfoMapper;
     private readonly IDepartmentInfoMapper _departmentInfoMapper;
     private readonly IOfficeInfoMapper _officeInfoMapper;
@@ -30,7 +27,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     private readonly IProjectInfoMapper _projectsInfoMapper;
     private readonly IOfficeService _officeService;
     private readonly IDepartmentService _departmentService;
-    private readonly IImageService _imageService;
     private readonly IPositionService _positionService;
     private readonly IRoleService _roleService;
     private readonly IUserService _userService;
@@ -70,7 +66,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
 
     public FilterUsersCommand(
     IUserInfoMapper userInfoMapper,
-    IImageInfoMapper imageInfoMapper,
     IPositionInfoMapper positionInfoMapper,
     IDepartmentInfoMapper departmentInfoMapper,
     IOfficeInfoMapper officeInfoMapper,
@@ -78,7 +73,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     IProjectInfoMapper projectsInfoMapper,
     IOfficeService officeService,
     IDepartmentService departmentService,
-    IImageService imageService,
     IPositionService positionService,
     IRoleService roleService,
     IUserService userService,
@@ -86,14 +80,12 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
     {
       _rolesInfoMapper = rolesInfoMapper;
       _userInfoMapper = userInfoMapper;
-      _imageInfoMapper = imageInfoMapper;
       _positionInfoMapper = positionInfoMapper;
       _departmentInfoMapper = departmentInfoMapper;
       _officeInfoMapper = officeInfoMapper;
       _projectsInfoMapper = projectsInfoMapper;
       _officeService = officeService;
       _departmentService = departmentService;
-      _imageService = imageService;
       _positionService = positionService;
       _roleService = roleService;
       _userService = userService;
@@ -177,12 +169,6 @@ namespace LT.DigitalOffice.FilterService.Business.Commands.User
           _projectsInfoMapper.Map(projectsData),
           projectsData);
 
-        List<ImageData> usersImages = await _imageService.GetImagesDataAsync(
-           usersData.Where(u => u.ImageId.HasValue).
-           Select(u => u.ImageId.Value).ToList(),
-           response.Errors);
-
-        userInfo = _userInfoMapper.Map(userInfo, usersData, _imageInfoMapper.Map(usersImages));
         response.TotalCount = totalCount.Value;
       }
 
